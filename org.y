@@ -34,7 +34,6 @@ void yyerror(const char *s);
 %token <sval> HEADLINE_FULL_TEXT
 
 %%
-
 headline:
                 HEADLINE_INDENT headline_body {
                 printf("indent %d", $1 );
@@ -72,6 +71,7 @@ tags:
          |       TAG ENDLN { cout << "found a tag <" << $1 << endl;}
          |       ENDLN {cout << "end of the line" << endl;}
                 ;
+
 %%
 
 main() {

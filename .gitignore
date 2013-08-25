@@ -1,0 +1,5 @@
+# artifacts
+org-parse
+*.tab.*
+lex.yy.c
+snazzle/*

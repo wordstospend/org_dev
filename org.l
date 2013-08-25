@@ -15,6 +15,8 @@ tags :([A-Za-z0-9_@#%]*:)+
 word [^\n[:blank:]]*
 whitespace [[:blank:]]*
 
+      // just a thought
+list ([0-9]+\.|\))|[+*]
 %%
 {headline_level} {
     yylval.ival = yyleng -1;
@@ -55,12 +57,13 @@ whitespace [[:blank:]]*
     return TAG;
         }
 
-<headline>{word} {
+<*>{word} {
     yylval.sval = yytext;
     return WORD;
  }
 
-<headline>[[:blank:]]+ { yylval.sval = yytext; return WHITESPACE;}
+<*>[[:blank:]]+ { yylval.sval = yytext; return WHITESPACE;}
 <headline>[\n] { BEGIN(0); return ENDLN;}
+
 
 %%
