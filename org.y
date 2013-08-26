@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <iostream>
 using namespace std;
-
+#define YYDEBUG 1 // debugger
 // stuff from flex that bison needs to know about:
 extern "C" int yylex();
 extern "C" int yyparse();
@@ -26,55 +26,93 @@ void yyerror(const char *s);
 
 // define the "terminal symbol" token types I'm going to use (in CAPS
 // by convention), and associate each with a field of the union:
-%token <ival> HEADLINE_INDENT
-%token <sval> PRIORITY
-%token <sval> WORD
-%token <sval> TAG
 %token <sval> WHITESPACE
-%token <sval> HEADLINE_FULL_TEXT
+%token <sval> DIRECTIVE // eg #+DRAWERS: TESTDRAWER
+%token <sval> PRIORITY
+%token <ival> STARS //   number of stars starting the line
+%token <sval> TAG
+%token <sval> WORD
+%token <sval> MARKER
+%token <ival> DEDENT
+%token <ival> INDENT
+%token <sval> TODO
 
 %%
-headline:
-                HEADLINE_INDENT headline_body {
-                printf("indent %d", $1 );
-                cout << endl;
-                }
+doc:            directives body
+        |       body
+        ;
+whiteline:      WHITESPACE ENDLN
+        |       ENDLN
+        ;
+
+directives:     directives DIRECTIVE ENDLN
+        |       directives whiteline
+        |       DIRECTIVE ENDLN
+        ;
+
+body:           body headline_block
+        |       body whiteline
+        |       headline_block
+        ;
+
+headline_block: headline ENDLN headline_body
+        |       headline ENDLN
+        |       headline
+        ;
+
+headline:       STARS todo_state headline_with_priority tags
+        ;
+
+todo_state:     TODO
+        |       ;
+
+priority:       PRIORITY
+        |       ;
+
+headline_with_priority: headline_text priority headline_text
                 ;
-headline_text:
-                headline_text WORD {
-                    cout << "WORD '" << $2 << "'" << endl;
-                }
-        |       WORD {
-                cout << "WORD '" << $1 << "'" << endl;
-                 }
-        |       headline_text WHITESPACE {
-                cout << "SPACE" << endl;
-                 }
-         |       WHITESPACE {
-                 cout << "SPACE" << endl;
-                 }
-                 ;
-headline_body:
-                 PRIORITY headline_text tags {
-                 cout << "found a healine: with priority"<< endl;
-                 }
-         |       headline_text tags {
-                 cout << "found a headline: with text  "<< endl;
-                 }
-         |       PRIORITY tags {
-                 cout << "found a headline free of text" << endl;
-                 }
-         |       tags { cout << "found headline free text and priority" << endl; }
-                 ;
-tags:
-                 tags TAG ENDLN { cout << "found a tag >" << $2 << endl;}
-         |       TAG ENDLN { cout << "found a tag <" << $1 << endl;}
-         |       ENDLN {cout << "end of the line" << endl;}
-                ;
+
+headline_text:  headline_text WORD
+        |       headline_text WHITESPACE
+        |       ;
+
+tags:           tags TAG
+        |       TAG
+        |
+        ;
+
+headline_body:  headline_body literal_text
+        |       headline_body list
+//                      |       headline_body drawer
+        ;
+
+literal_text:   literal_text WHITESPACE
+        |       literal_text WORD
+        |       literal_text ENDLN
+        ;
+
+list:           list entry
+        |       entry
+        ;
+
+entry:          singleton
+        |       INDENT list DEDENT
+        ;
+
+singleton:      MARKER list_text
+        |       MARKER ENDLN
+        |       MARKER
+        ;
+
+list_text:      list_text WORD
+        |       list_text WHITESPACE
+        |       list_text ENDLN
+        ;
 
 %%
 
 main() {
+    //yydebug = 1;
 	// open a file handle to a particular file:
 	FILE *myfile = fopen("test.org", "r");
 	// make sure it is valid:

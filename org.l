@@ -10,18 +10,18 @@ using namespace std;
 %s list
 %x headline
 headline_level ^\**[[:blank:]]
-priority \[#[a-zA-Z]\]([[:blank:]]|\n)
+priority \[#[a-zA-Z]\]
 tags :([A-Za-z0-9_@#%]*:)+
 word [^\n[:blank:]]*
 whitespace [[:blank:]]*
+directive adirctivethatdoesntexist
 
-      // just a thought
-list ([0-9]+\.|\))|[+*]
+
 %%
 {headline_level} {
     yylval.ival = yyleng -1;
     BEGIN(headline);
-    return HEADLINE_INDENT ;
+    return STARS ;
  }
 
 <headline>{priority} {
@@ -62,7 +62,7 @@ list ([0-9]+\.|\))|[+*]
     return WORD;
  }
 
-<*>[[:blank:]]+ { yylval.sval = yytext; return WHITESPACE;}
+<headline>[[:blank:]]+ { yylval.sval = yytext; return WHITESPACE;}
 <headline>[\n] { BEGIN(0); return ENDLN;}
 
 

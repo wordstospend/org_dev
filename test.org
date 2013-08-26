@@ -1,29 +1,3 @@
-#+DRAWERS: TESTDRAWER
-- list
-- of
-- things
-:TESTDRAWER:
-:key1: value
-:END:
-* TODO a head line
-
-keep going
-1. a list
-2. of things
-   1) a sub list
-** [#B] keep hmmmm                                                    :@work:
-:PROPERTIES:
-:key: value
-:key2: value2
-:END:
-a man a plan a canal panama
-this is how do
-- a man
-- a plan
-  - thanks
-- a canal
-ok and now where are we at
-** TODO [#B] third one
-:TESTDRAWER:
-:key1: value
-:end: value
+* headline that's all
+* [#B] a seccond headline with priority
+** a taged headline                                                  :@work:
