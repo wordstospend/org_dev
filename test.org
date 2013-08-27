@@ -1,3 +1,30 @@
 * headline that's all
 * [#B] a seccond headline with priority
-** a taged headline                                                  :@work:
+** a taged headline [#A]                                              :@work
+1) test
+2) of this
+3) this is the test
+test two
+1) more test
+2)
+3)
+   - once more into the best thing fo rit
+to keep going
+1) that is writ
+2) go one and keep taking notes
+   this is what we want out of everyone
+3)
+4)
+5)
+6)
+7)
+8)
+9)
+10)
+11)
+12) testing
+    for this concept
+13)
+
+a list is a set of things
+each with a mark followed by any

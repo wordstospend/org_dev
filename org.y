@@ -36,22 +36,24 @@ void yyerror(const char *s);
 %token <ival> DEDENT
 %token <ival> INDENT
 %token <sval> TODO
+%token <sval> DRAWERSTART
+%token <sval> DRAWERKEY
+%token <sval> DRAWERVALUE
+%token <sval> DRAWEREND
 
 %%
 doc:            directives body
-        |       body
-        ;
-whiteline:      WHITESPACE ENDLN
-        |       ENDLN
         ;
 
+
 directives:     directives DIRECTIVE ENDLN
-        |       directives whiteline
-        |       DIRECTIVE ENDLN
+        |       directives DIRECTIVE WHITESPACE ENDLN
+        |       directives WHITESPACE ENDLN
+        |       directives ENDLN
+        |       /* empty */
         ;
 
 body:           body headline_block
-        |       body whiteline
         |       headline_block
         ;
 
@@ -66,40 +68,51 @@ headline:       STARS todo_state headline_with_priority tags
 todo_state:     TODO
         |       ;
 
-priority:       PRIORITY
-        |       ;
-
-headline_with_priority: headline_text priority headline_text
-                ;
+headline_with_priority: PRIORITY headline_text
+        |       headline_text PRIORITY headline_text
+        |       /* empty */ ;
 
 headline_text:  headline_text WORD
         |       headline_text WHITESPACE
-        |       ;
+        |       WORD
+        |       WHITESPACE
+                ;
 
 tags:           tags TAG
-        |       TAG
         |
         ;
 
-headline_body:  headline_body literal_text
-        |       headline_body list
-//                      |       headline_body drawer
+headline_body:  headline_body WORD
+        |       headline_body WHITESPACE
+        |       headline_body ENDLN
+        //      |       headline_body list
+        |       WORD
+        |       WHITESPACE
+        |       ENDLN
+;
+        /*      |       list
         ;
 
-literal_text:   literal_text WHITESPACE
-        |       literal_text WORD
-        |       literal_text ENDLN
+list:           list singleton
+        |       singleton
+        |       list INDENT list
         ;
 
-list:           list entry
-        |       entry
+singlton:       MARKER text
         ;
 
+text:           text WORD
+        |       text WHITESPACE
+        |       WORD
+        |       WHITESPACE
+        |       text ENDLN INDENT
+        |       ENDLN
+        ;
 entry:          singleton
         |       INDENT list DEDENT
         ;
 
-singleton:      MARKER list_text
+singleton:      MARKER list
         |       MARKER ENDLN
         |       MARKER
         ;
@@ -108,7 +121,7 @@ list_text:      list_text WORD
         |       list_text WHITESPACE
         |       list_text ENDLN
         ;
-
+*/
 %%
 
 main() {
