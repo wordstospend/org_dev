@@ -85,43 +85,36 @@ tags:           tags TAG
 headline_body:  headline_body WORD
         |       headline_body WHITESPACE
         |       headline_body ENDLN
-        //      |       headline_body list
+        |       headline_body list
         |       WORD
         |       WHITESPACE
         |       ENDLN
-;
-        /*      |       list
+        |       list
         ;
 
 list:           list singleton
         |       singleton
-        |       list INDENT list
+        |       MARKER
         ;
 
-singlton:       MARKER text
+singleton:      MARKER item
         ;
 
 text:           text WORD
         |       text WHITESPACE
         |       WORD
         |       WHITESPACE
-        |       text ENDLN INDENT
+        ;
+
+item:           text
         |       ENDLN
-        ;
-entry:          singleton
-        |       INDENT list DEDENT
-        ;
-
-singleton:      MARKER list
-        |       MARKER ENDLN
-        |       MARKER
+        |       text ENDLN
+        |       text ENDLN extra_lines
         ;
 
-list_text:      list_text WORD
-        |       list_text WHITESPACE
-        |       list_text ENDLN
-        ;
-*/
+extra_lines:    INDENT item;
+
+
 %%
 
 main() {

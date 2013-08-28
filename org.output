@@ -1,12 +1,16 @@
 Terminals which are not used
 
-   MARKER
    DEDENT
-   INDENT
    DRAWERSTART
    DRAWERKEY
    DRAWERVALUE
    DRAWEREND
+
+
+State 27 conflicts: 3 shift/reduce
+State 29 conflicts: 1 shift/reduce
+State 39 conflicts: 3 shift/reduce
+State 44 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -48,25 +52,45 @@ Grammar
    24 headline_body: headline_body WORD
    25              | headline_body WHITESPACE
    26              | headline_body ENDLN
-   27              | WORD
-   28              | WHITESPACE
-   29              | ENDLN
+*  27              | headline_body list
+   28              | WORD
+*  29              | WHITESPACE
+   30              | ENDLN
+   31              | list
+
+   32 list: list singleton
+   33     | singleton
+   34     | MARKER
+
+   35 singleton: MARKER item
+
+   36 text: text WORD
+   37     | text WHITESPACE
+   38     | WORD
+*  39     | WHITESPACE
+
+   40 item: text
+   41     | ENDLN
+   42     | text ENDLN
+   43     | text ENDLN extra_lines
+
+*  44 extra_lines: INDENT item
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-ENDLN (258) 2 3 4 5 9 10 26 29
-WHITESPACE (259) 3 4 19 21 25 28
+ENDLN (258) 2 3 4 5 9 10 26 30 41 42 43
+WHITESPACE (259) 3 4 19 21 25 29 37 39
 DIRECTIVE (260) 2 3
 PRIORITY (261) 15 16
 STARS (262) 12
 TAG (263) 22
-WORD (264) 18 20 24 27
-MARKER (265)
+WORD (264) 18 20 24 28 36 38
+MARKER (265) 34 35
 DEDENT (266)
-INDENT (267)
+INDENT (267) 44
 TODO (268) 13
 DRAWERSTART (269)
 DRAWERKEY (270)
@@ -97,7 +121,17 @@ headline_text (26)
 tags (27)
     on left: 22 23, on right: 12 22
 headline_body (28)
-    on left: 24 25 26 27 28 29, on right: 9 24 25 26
+    on left: 24 25 26 27 28 29 30 31, on right: 9 24 25 26 27
+list (29)
+    on left: 32 33 34, on right: 27 31 32
+singleton (30)
+    on left: 35, on right: 32 33
+text (31)
+    on left: 36 37 38 39, on right: 36 37 40 42 43
+item (32)
+    on left: 40 41 42 43, on right: 35 44
+extra_lines (33)
+    on left: 44, on right: 43
 
 
 state 0
@@ -264,10 +298,13 @@ state 17
     ENDLN       shift, and go to state 24
     WHITESPACE  shift, and go to state 25
     WORD        shift, and go to state 26
+    MARKER      shift, and go to state 27
 
     $default  reduce using rule 10 (headline_block)
 
-    headline_body  go to state 27
+    headline_body  go to state 28
+    list           go to state 29
+    singleton      go to state 30
 
 
 state 18
@@ -291,7 +328,7 @@ state 20
     WHITESPACE  shift, and go to state 19
     WORD        shift, and go to state 21
 
-    headline_text  go to state 28
+    headline_text  go to state 31
 
 
 state 21
@@ -307,7 +344,7 @@ state 22
 
     $default  reduce using rule 23 (tags)
 
-    tags  go to state 29
+    tags  go to state 32
 
 
 state 23
@@ -316,127 +353,300 @@ state 23
    18 headline_text: headline_text . WORD
    19              | headline_text . WHITESPACE
 
-    WHITESPACE  shift, and go to state 30
-    PRIORITY    shift, and go to state 31
-    WORD        shift, and go to state 32
+    WHITESPACE  shift, and go to state 33
+    PRIORITY    shift, and go to state 34
+    WORD        shift, and go to state 35
 
 
 state 24
 
-   29 headline_body: ENDLN .
+   30 headline_body: ENDLN .
 
-    $default  reduce using rule 29 (headline_body)
+    $default  reduce using rule 30 (headline_body)
 
 
 state 25
 
-   28 headline_body: WHITESPACE .
+   29 headline_body: WHITESPACE .
 
-    $default  reduce using rule 28 (headline_body)
+    $default  reduce using rule 29 (headline_body)
 
 
 state 26
 
-   27 headline_body: WORD .
+   28 headline_body: WORD .
 
-    $default  reduce using rule 27 (headline_body)
+    $default  reduce using rule 28 (headline_body)
 
 
 state 27
+
+   34 list: MARKER .
+   35 singleton: MARKER . item
+
+    ENDLN       shift, and go to state 36
+    WHITESPACE  shift, and go to state 37
+    WORD        shift, and go to state 38
+
+    ENDLN       [reduce using rule 34 (list)]
+    WHITESPACE  [reduce using rule 34 (list)]
+    WORD        [reduce using rule 34 (list)]
+    $default    reduce using rule 34 (list)
+
+    text  go to state 39
+    item  go to state 40
+
+
+state 28
 
     9 headline_block: headline ENDLN headline_body .
    24 headline_body: headline_body . WORD
    25              | headline_body . WHITESPACE
    26              | headline_body . ENDLN
+   27              | headline_body . list
 
-    ENDLN       shift, and go to state 33
-    WHITESPACE  shift, and go to state 34
-    WORD        shift, and go to state 35
+    ENDLN       shift, and go to state 41
+    WHITESPACE  shift, and go to state 42
+    WORD        shift, and go to state 43
+    MARKER      shift, and go to state 27
 
     $default  reduce using rule 9 (headline_block)
 
+    list       go to state 44
+    singleton  go to state 30
 
-state 28
+
+state 29
+
+   31 headline_body: list .
+   32 list: list . singleton
+
+    MARKER  shift, and go to state 45
+
+    MARKER    [reduce using rule 31 (headline_body)]
+    $default  reduce using rule 31 (headline_body)
+
+    singleton  go to state 46
+
+
+state 30
+
+   33 list: singleton .
+
+    $default  reduce using rule 33 (list)
+
+
+state 31
 
    15 headline_with_priority: PRIORITY headline_text .
    18 headline_text: headline_text . WORD
    19              | headline_text . WHITESPACE
 
-    WHITESPACE  shift, and go to state 30
-    WORD        shift, and go to state 32
+    WHITESPACE  shift, and go to state 33
+    WORD        shift, and go to state 35
 
     $default  reduce using rule 15 (headline_with_priority)
 
 
-state 29
+state 32
 
    12 headline: STARS todo_state headline_with_priority tags .
    22 tags: tags . TAG
 
-    TAG  shift, and go to state 36
+    TAG  shift, and go to state 47
 
     $default  reduce using rule 12 (headline)
 
 
-state 30
+state 33
 
    19 headline_text: headline_text WHITESPACE .
 
     $default  reduce using rule 19 (headline_text)
 
 
-state 31
+state 34
 
    16 headline_with_priority: headline_text PRIORITY . headline_text
 
     WHITESPACE  shift, and go to state 19
     WORD        shift, and go to state 21
 
-    headline_text  go to state 37
+    headline_text  go to state 48
 
 
-state 32
+state 35
 
    18 headline_text: headline_text WORD .
 
     $default  reduce using rule 18 (headline_text)
 
 
-state 33
+state 36
+
+   41 item: ENDLN .
+
+    $default  reduce using rule 41 (item)
+
+
+state 37
+
+   39 text: WHITESPACE .
+
+    $default  reduce using rule 39 (text)
+
+
+state 38
+
+   38 text: WORD .
+
+    $default  reduce using rule 38 (text)
+
+
+state 39
+
+   36 text: text . WORD
+   37     | text . WHITESPACE
+   40 item: text .
+   42     | text . ENDLN
+   43     | text . ENDLN extra_lines
+
+    ENDLN       shift, and go to state 49
+    WHITESPACE  shift, and go to state 50
+    WORD        shift, and go to state 51
+
+    ENDLN       [reduce using rule 40 (item)]
+    WHITESPACE  [reduce using rule 40 (item)]
+    WORD        [reduce using rule 40 (item)]
+    $default    reduce using rule 40 (item)
+
+
+state 40
+
+   35 singleton: MARKER item .
+
+    $default  reduce using rule 35 (singleton)
+
+
+state 41
 
    26 headline_body: headline_body ENDLN .
 
     $default  reduce using rule 26 (headline_body)
 
 
-state 34
+state 42
 
    25 headline_body: headline_body WHITESPACE .
 
     $default  reduce using rule 25 (headline_body)
 
 
-state 35
+state 43
 
    24 headline_body: headline_body WORD .
 
     $default  reduce using rule 24 (headline_body)
 
 
-state 36
+state 44
+
+   27 headline_body: headline_body list .
+   32 list: list . singleton
+
+    MARKER  shift, and go to state 45
+
+    MARKER    [reduce using rule 27 (headline_body)]
+    $default  reduce using rule 27 (headline_body)
+
+    singleton  go to state 46
+
+
+state 45
+
+   35 singleton: MARKER . item
+
+    ENDLN       shift, and go to state 36
+    WHITESPACE  shift, and go to state 37
+    WORD        shift, and go to state 38
+
+    text  go to state 39
+    item  go to state 40
+
+
+state 46
+
+   32 list: list singleton .
+
+    $default  reduce using rule 32 (list)
+
+
+state 47
 
    22 tags: tags TAG .
 
     $default  reduce using rule 22 (tags)
 
 
-state 37
+state 48
 
    16 headline_with_priority: headline_text PRIORITY headline_text .
    18 headline_text: headline_text . WORD
    19              | headline_text . WHITESPACE
 
-    WHITESPACE  shift, and go to state 30
-    WORD        shift, and go to state 32
+    WHITESPACE  shift, and go to state 33
+    WORD        shift, and go to state 35
 
     $default  reduce using rule 16 (headline_with_priority)
+
+
+state 49
+
+   42 item: text ENDLN .
+   43     | text ENDLN . extra_lines
+
+    INDENT  shift, and go to state 52
+
+    $default  reduce using rule 42 (item)
+
+    extra_lines  go to state 53
+
+
+state 50
+
+   37 text: text WHITESPACE .
+
+    $default  reduce using rule 37 (text)
+
+
+state 51
+
+   36 text: text WORD .
+
+    $default  reduce using rule 36 (text)
+
+
+state 52
+
+   44 extra_lines: INDENT . item
+
+    ENDLN       shift, and go to state 36
+    WHITESPACE  shift, and go to state 37
+    WORD        shift, and go to state 38
+
+    text  go to state 39
+    item  go to state 54
+
+
+state 53
+
+   43 item: text ENDLN extra_lines .
+
+    $default  reduce using rule 43 (item)
+
+
+state 54
+
+   44 extra_lines: INDENT item .
+
+    $default  reduce using rule 44 (extra_lines)
