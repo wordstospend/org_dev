@@ -23,6 +23,7 @@ void yyerror(const char *s);
 
 // constant-string token
 %token ENDLN
+%token EOF
 
 // define the "terminal symbol" token types I'm going to use (in CAPS
 // by convention), and associate each with a field of the union:
@@ -40,7 +41,8 @@ void yyerror(const char *s);
 %token <sval> DRAWERKEY
 %token <sval> DRAWERVALUE
 %token <sval> DRAWEREND
-
+%token <sval> BLOCK /* The block of text following a list item. Where each line must
+have an indention to match the first character of the first */
 %%
 doc:            directives body
         ;
@@ -58,19 +60,22 @@ body:           body headline_block
         ;
 
 headline_block: headline ENDLN headline_body
-        |       headline ENDLN
-        |       headline
+        |       headline EOF
         ;
 
 headline:       STARS todo_state headline_with_priority tags
         ;
 
 todo_state:     TODO
-        |       ;
+        |
+        ;
 
 headline_with_priority: PRIORITY headline_text
         |       headline_text PRIORITY headline_text
-        |       /* empty */ ;
+        |       headline_text PRIORITY
+        |       headline_text
+        |       PRIORITY
+        |       ;
 
 headline_text:  headline_text WORD
         |       headline_text WHITESPACE
@@ -82,38 +87,24 @@ tags:           tags TAG
         |
         ;
 
-headline_body:  headline_body WORD
-        |       headline_body WHITESPACE
-        |       headline_body ENDLN
-        |       headline_body list
-        |       WORD
-        |       WHITESPACE
+
+headline_body:  headline_body ENDLN
+        |       headline_body EOF
+        |       entry
+        |       text
+        |       DEDENT
         |       ENDLN
-        |       list
         ;
-
-list:           list singleton
-        |       singleton
-        |       MARKER
-        ;
-
-singleton:      MARKER item
-        ;
-
 text:           text WORD
         |       text WHITESPACE
         |       WORD
         |       WHITESPACE
         ;
 
-item:           text
-        |       ENDLN
-        |       text ENDLN
-        |       text ENDLN extra_lines
-        ;
-
-extra_lines:    INDENT item;
-
+entry:          MARKER BLOCK
+        |       MARKER /* empty */
+        |       MARKER BLOCK INDENT entry
+;
 
 %%
 

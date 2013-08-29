@@ -1,15 +1,38 @@
-* headline that's all
-* [#B] a seccond headline with priority
-** a taged headline [#A]                                              :@work
-1) test
-2) of this
-3) this is the test
-test two
-1) more test
-2)
-3)
-   - once more into the best thing fo rit
-to keep going
-1) that is writ
-2) go one and keep taking note
-   testing
+* headline with an endln
+how does this work
+followed by text
+1) (Mark) endln
+2) (MarK) text
+   (indent) text
+   1) (mark) text
+   2) (mark)
+3) (dedent) (mark) text
+4) (mark)
+   1) (indent) text
+      another indent
+   4) more marks wee can
+keep going and going
+but it won't
+stop it
+now were done
+but not done witht he body
+2) a dedent
+
+the previous was just an endln
+      ' that was just white space and now End of file
+
+
+
+an end of line does not end the body of anything
+
+it is the the start of the next thing.
+
+header bodies go until the next header or EOF
+list entries go until there is a
+- WORD
+- MARKER
+- PRIORITY
+- EOF
+- STAR
+- TODO
+that follows and ENDLN
