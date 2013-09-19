@@ -3,3 +3,4 @@ org-parse
 *.tab.*
 lex.yy.c
 snazzle/*
+org.output
