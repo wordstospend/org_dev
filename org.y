@@ -23,7 +23,7 @@ void yyerror(const char *s);
 
 // constant-string token
 %token ENDLN
-%token EOF
+%token EOF_TOKEN
 
 // define the "terminal symbol" token types I'm going to use (in CAPS
 // by convention), and associate each with a field of the union:
@@ -60,7 +60,7 @@ body:           body headline_block
         ;
 
 headline_block: headline ENDLN headline_body
-        |       headline EOF
+        |       headline EOF_TOKEN
         ;
 
 headline:       STARS todo_state headline_with_priority tags
@@ -89,7 +89,7 @@ tags:           tags TAG
 
 
 headline_body:  headline_body ENDLN
-        |       headline_body EOF
+        |       headline_body EOF_TOKEN
         |       entry
         |       text
         |       DEDENT
