@@ -4,12 +4,18 @@ Org mode does not seem to be as unabiguous as we might like but that is fine.
 This is just a first bite at the apple
 
 * Code complete
-** DONE Parser
+** DONE Parser org.y
 This seems to be mostly done I'm sure I've got some gaps but for now this
 looks like it is good enough
-** TODO Lexer
+** TODO Lexer org.l
+This has a bunch of code but really needs to be from scratch. The current
+plan is add stubs for all of the tokens that will need to be output by the
+lexer and then to go one by one and add work for them. At each case we
+should add a test case for that token
 * Testing sweet
 ** TODO Testing Harness
+We now can pass in a filename to the resulting org-parser but we still need
+to add a bit more machinery, maybe a prove script or some such thing
 ** TODO Unit test
 * Objective C realease
 ** TODO research and outline

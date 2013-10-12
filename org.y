@@ -108,10 +108,25 @@ entry:          MARKER BLOCK
 
 %%
 
-main() {
+main( int argc, const char* argv[] )
+{
+	// Prints each argument on the command line.
+	for( int i = 0; i < argc; i++ )
+	{
+		printf( "arg %d: %s\n", i, argv[i] );
+	}
+
+    FILE *myfile;
+    if (argc > 1) {
+      // we have a file name
+      myfile = fopen(argv[1], "r");
+    }
+    else {
+      myfile = fopen("test.org", "r");
+    }
     //yydebug = 1;
 	// open a file handle to a particular file:
-	FILE *myfile = fopen("test.org", "r");
+
 	// make sure it is valid:
 	if (!myfile) {
 		cout << "I can't open test.org!" << endl;
