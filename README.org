@@ -1,0 +1,15 @@
+This is the lexer/parser project for org mode
+
+Org mode does not seem to be as unabiguous as we might like but that is fine.
+This is just a first bite at the apple
+
+* Code complete
+** DONE Parser
+This seems to be mostly done I'm sure I've got some gaps but for now this
+looks like it is good enough
+** TODO Lexer
+* Testing sweet
+** TODO Testing Harness
+** TODO Unit test
+* Objective C realease
+** TODO research and outline
