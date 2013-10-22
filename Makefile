@@ -9,3 +9,6 @@ org: lex.yy.c org.tab.c org.tab.h
 
 test: org
 	prove -l t/parse.t
+
+bison_debug:
+	bison -d -v org.y
