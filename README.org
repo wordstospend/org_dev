@@ -13,9 +13,10 @@ plan is add stubs for all of the tokens that will need to be output by the
 lexer and then to go one by one and add work for them. At each case we
 should add a test case for that token
 * Testing sweet
-** TODO Testing Harness
+** DONE Testing Harness
 We now can pass in a filename to the resulting org-parser but we still need
 to add a bit more machinery, maybe a prove script or some such thing
+** TODO Testing Harness for AST result
 ** TODO Unit test
 * Objective C realease
 ** TODO research and outline
