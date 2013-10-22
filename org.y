@@ -111,10 +111,10 @@ entry:          MARKER BLOCK
 main( int argc, const char* argv[] )
 {
 	// Prints each argument on the command line.
-	for( int i = 0; i < argc; i++ )
-	{
+  	/*for( int i = 0; i < argc; i++ )
+    {
 		printf( "arg %d: %s\n", i, argv[i] );
-	}
+        }*/
 
     FILE *myfile;
     if (argc > 1) {
@@ -145,7 +145,7 @@ main( int argc, const char* argv[] )
 }
 
 void yyerror(const char *s) {
-	cout << "EEK, parse error!  Message: " << s << endl;
+	cout << "Parse error!  Message: " << s << endl;
 	// might as well halt now:
 	exit(-1);
 }

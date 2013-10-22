@@ -6,3 +6,6 @@ lex.yy.c: org.l org.tab.h
 
 org: lex.yy.c org.tab.c org.tab.h
 	g++ org.tab.c lex.yy.c -ll -o org-parse
+
+test: org
+	prove -l t/parse.t
