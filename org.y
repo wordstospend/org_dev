@@ -60,7 +60,7 @@ body:           body headline_block
         ;
 
 headline_block: headline ENDLN headline_body
-        |       headline EOF_TOKEN
+        |       headline
         ;
 
 headline:       STARS todo_state headline_with_priority tags
