@@ -10,5 +10,16 @@ org: lex.yy.c org.tab.c org.tab.h
 test: org
 	prove -l t/parse.t
 
-bison_debug:
+# the debug version
+
+bison_debug: flex_debug
 	bison -d -v org.y
+
+flex_debug: org.l org.tab.h
+	flex -d org.l
+
+org_debug:bison_debug flex_debug
+	g++ org.tab.c lex.yy.c -ll -o org-parse
+
+test_debug: org_debug
+	prove -l t/parse.t
