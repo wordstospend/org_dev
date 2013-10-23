@@ -17,6 +17,8 @@ should add a test case for that token
 We now can pass in a filename to the resulting org-parser but we still need
 to add a bit more machinery, maybe a prove script or some such thing
 ** TODO Testing Harness for AST result
+*** TODO output ast to file
+*** TODO compaire ast from file parser output
 ** TODO Unit test
 * Objective C realease
 ** TODO research and outline
