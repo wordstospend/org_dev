@@ -16,7 +16,6 @@ word [^\n[:blank:]]*
 whitespace [[:blank:]]*
 directive adirctivethatdoesntexist
 
-
 %%
 {headline_level} {
     yylval.ival = yyleng -1;
@@ -31,5 +30,6 @@ directive adirctivethatdoesntexist
 
 <headline>[[:blank:]]+ { yylval.sval = yytext; return WHITESPACE;}
 
+<*>\n {return ENDLN;}
 
 %%

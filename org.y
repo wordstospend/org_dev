@@ -61,6 +61,7 @@ body:           body headline_block
 
 headline_block: headline ENDLN headline_body
         |       headline
+        |       headline ENDLN
         ;
 
 headline:       STARS todo_state headline_with_priority tags
@@ -89,7 +90,6 @@ tags:           tags TAG
 
 
 headline_body:  headline_body ENDLN
-        |       headline_body EOF_TOKEN
         |       entry
         |       text
         |       DEDENT
