@@ -22,3 +22,10 @@ to add a bit more machinery, maybe a prove script or some such thing
 ** TODO Unit test
 * Objective C realease
 ** TODO research and outline
+
+* org parser notes
+a headline is a child of the current parent if its star count > the cout of
+the parent.
+
+otherwise the current parent is set to the parent of the current parent and
+the rule is applied again.

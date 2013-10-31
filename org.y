@@ -27,6 +27,8 @@ void yyerror(const char *s);
 
 // define the "terminal symbol" token types I'm going to use (in CAPS
 // by convention), and associate each with a field of the union:
+%token <sval> SECTION
+%token <sval> TITLE
 %token <sval> WHITESPACE
 %token <sval> DIRECTIVE // eg #+DRAWERS: TESTDRAWER
 %token <sval> PRIORITY
@@ -44,108 +46,42 @@ void yyerror(const char *s);
 %token <sval> BLOCK /* The block of text following a list item. Where each line must
 have an indention to match the first character of the first */
 %%
-doc:            directives body
-        ;
 
-
-directives:     directives DIRECTIVE ENDLN
-        |       directives DIRECTIVE WHITESPACE ENDLN
-        |       directives WHITESPACE ENDLN
-        |       directives ENDLN
+doc:            SECTION doc2
+        |       headline doc
         |       /* empty */
         ;
 
-body:           body headline_block
-        |       headline_block
+doc2:           headline doc
+        |       /* empty */
+        ;
+headline:        STARS todo_keyword priority title tags
         ;
 
-headline_block: headline ENDLN headline_body
-        |       headline
-        |       headline ENDLN
+todo_keyword:   TODO
+        |       /* empty */
         ;
 
-headline:       STARS todo_state headline_with_priority tags
+priority:       PRIORITY
+        |       /* empty */
         ;
 
-todo_state:     TODO
-        |
+title:         TITLE /* a headline is treated differently if the first word of the
+               title is a org-comment-string
+               if the title is org-footnote-section it will be considered a footnote
+               section. I don't know how I'm going to handle this yet. Is this part
+               of the parsing, or the lexing? */
+        |      /* empty */
         ;
 
-headline_with_priority: PRIORITY headline_text
-        |       headline_text PRIORITY headline_text
-        |       headline_text PRIORITY
-        |       headline_text
-        |       PRIORITY
-        |       ;
-
-headline_text:  headline_text WORD
-        |       headline_text WHITESPACE
-        |       WORD
-        |       WHITESPACE
-                ;
-
-tags:           tags TAG
-        |
+tags:          tags TAG
+        |      /* empty */
         ;
 
+/* the follwing or for a future version
+greater_element
 
-headline_body:  headline_body ENDLN
-        |       entry
-        |       text
-        |       DEDENT
-        |       ENDLN
-        ;
-text:           text WORD
-        |       text WHITESPACE
-        |       WORD
-        |       WHITESPACE
-        ;
+element
 
-entry:          MARKER BLOCK
-        |       MARKER /* empty */
-        |       MARKER BLOCK INDENT entry
-;
-
-%%
-
-main( int argc, const char* argv[] )
-{
-	// Prints each argument on the command line.
-  	/*for( int i = 0; i < argc; i++ )
-    {
-		printf( "arg %d: %s\n", i, argv[i] );
-        }*/
-
-    FILE *myfile;
-    if (argc > 1) {
-      // we have a file name
-      myfile = fopen(argv[1], "r");
-    }
-    else {
-      myfile = fopen("test.org", "r");
-    }
-    //yydebug = 1;
-	// open a file handle to a particular file:
-
-	// make sure it is valid:
-	if (!myfile) {
-		cout << "I can't open test.org!" << endl;
-		return -1;
-	}
-	// set flex to read from it instead of defaulting to STDIN:
-	yyin = myfile;
-
-	// parse through the input until there is no more:
-	do {
-        cout << "first call" << endl;
-		yyparse();
-        cout << "after " << endl;
-	} while (!feof(yyin));
-
-}
-
-void yyerror(const char *s) {
-	cout << "Parse error!  Message: " << s << endl;
-	// might as well halt now:
-	exit(-1);
-}
+object
+*/
