@@ -18,6 +18,15 @@ We now can pass in a filename to the resulting org-parser but we still need
 to add a bit more machinery, maybe a prove script or some such thing
 ** TODO Testing Harness for AST result
 *** TODO output ast to file
+the basis for this work is /Users/nfair/Documents/personal_dev/LexAndYaccCode/calc3.y
+**** TODO define a set of nodes for the ast
+The question is for things such as 'priority' where it may or may not exist
+Should I create a struct to store the node then detect the nature of the struct
+in the parent rule action (in this case headline). Or can just do no action
+and if so can I detect the lack of value in the parent action
+**** TODO define functions that return them
+**** TODO define parser actions to call node creation funcitons
+**** TODO define a fuction that reads the ast and outputs it as an in-order traversal
 *** TODO compaire ast from file parser output
 ** TODO Unit test
 * Objective C realease
@@ -29,3 +38,11 @@ the parent.
 
 otherwise the current parent is set to the parent of the current parent and
 the rule is applied again.
+
+how do I know if I am seperated from  the next thing?
+
+ a priority, tags, and todo must be sandwhiched by \s or \n or end of file
+ we can't detect end of file with anything else but it will by length nice ok
+I got this
+
+How do I deal with the title? Maybe what I do is have words and white space.
