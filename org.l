@@ -24,43 +24,33 @@ directive adirctivethatdoesntexist
     return STARS ;
 }
 
-<headline>{todo}[ \t\n] { // this isn't safe for all systems where newline is weird
-    // end of the line means we leave headline state
-    if (yytext[yyleng - 1] == '\n') {
-        BEGIN(0);
-    }
+<headline>{todo} {
+    yylval.sval = yytext;
+    return TODO;
+ }
 
-    char *yycopy = strdup( yytext );
-    // trim the space from the end
-    yycopy[yyleng - 1] = '\0';
-    yylval.sval = yycopy;
-    free(yycopy);
-    return TODO
-}
-
-<headline>{priority}[ \t\n] {
-    // end of the line means we leave headline state
-    if (yytext[yyleng - 1] == '\n') {
-        BEGIN(0);
-    }
-
-    char *yycopy = strdup( yytext );
-    // trim the space from the end
-    yycopy[yyleng - 1] = '\0';
-    yylval.sval = yycopy;
-    free(yycopy);
+<headline>{priority} {
+    yylval.sval = yytext;
     return PRIORITY;
-
 }
-/// need some way to handle the above two in the case of end of file
 
-<*>{word} {
+
+<headline>{word} {
+    // word will always be strictly longer than the tags, priorty, or todo if those
+    // are not followed by a spaces eg 'DONEIsNotATodoState' where it will match a
+    // word rather than a todo because of the length
+
     yylval.sval = yytext;
     return WORD;
 }
 
-<headline>[[:blank:]]+ { yylval.sval = yytext; return WHITESPACE;}
+<headline>[[:blank:]]+ {
+    yylval.sval = yytext;
+    return WHITESPACE;
+}
 
-<*>\n {return ENDLN;}
+<headline>\n {
+    BEGIN(0);
+ }
 
 %%

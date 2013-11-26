@@ -55,28 +55,39 @@ doc:            SECTION doc2
 doc2:           headline doc
         |       /* empty */
         ;
+
 headline:        STARS todo_keyword priority title tags
+
         ;
 
-todo_keyword:   TODO
+todo_keyword:   TODO WHITESPACE
+        |       TODO
         |       /* empty */
         ;
 
-priority:       PRIORITY
+priority:       PRIORITY WHITESPACE
+        |       PRIORITY
         |       /* empty */
         ;
 
-title:         TITLE /* a headline is treated differently if the first word of the
+title:          title WORD
+        |       title WHITESPACE
+        |       WORD
+        ;
+
+/*title:         TITLE /* a headline is treated differently if the first word of the
                title is a org-comment-string
                if the title is org-footnote-section it will be considered a footnote
                section. I don't know how I'm going to handle this yet. Is this part
                of the parsing, or the lexing? */
+  //      |      /* empty */
+    //    ;
+
+tags:           tags TAG WHITESPACE
+        |       tags TAG
         |      /* empty */
         ;
 
-tags:          tags TAG
-        |      /* empty */
-        ;
 
 /* the follwing or for a future version
 greater_element
@@ -85,3 +96,47 @@ element
 
 object
 */
+
+%%
+
+main( int argc, const char* argv[] )
+{
+	// Prints each argument on the command line.
+  	/*for( int i = 0; i < argc; i++ )
+    {
+		printf( "arg %d: %s\n", i, argv[i] );
+        }*/
+
+    FILE *myfile;
+    if (argc > 1) {
+      // we have a file name
+      myfile = fopen(argv[1], "r");
+    }
+    else {
+      myfile = fopen("test.org", "r");
+    }
+    //yydebug = 1;
+	// open a file handle to a particular file:
+
+	// make sure it is valid:
+	if (!myfile) {
+		cout << "I can't open test.org!" << endl;
+		return -1;
+	}
+	// set flex to read from it instead of defaulting to STDIN:
+	yyin = myfile;
+
+	// parse through the input until there is no more:
+	do {
+        cout << "first call" << endl;
+		yyparse();
+        cout << "after " << endl;
+	} while (!feof(yyin));
+
+}
+
+void yyerror(const char *s) {
+	cout << "Parse error!  Message: " << s << endl;
+	// might as well halt now:
+	exit(-1);
+}
