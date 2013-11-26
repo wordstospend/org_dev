@@ -3,4 +3,3 @@ basic section
 * one headline
 with a section
 * TODOheadline without one
-* TODO
