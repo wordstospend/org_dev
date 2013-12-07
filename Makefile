@@ -5,7 +5,7 @@ lex.yy.c: org.l org.tab.h
 	flex org.l
 
 org: lex.yy.c org.tab.c org.tab.h
-	g++ org.tab.c lex.yy.c -ll -o org-parse
+	g++-4.2 org.tab.c lex.yy.c -ll -o org-parse
 
 test: org
 	prove -l t/parse.t
@@ -19,7 +19,7 @@ flex_debug: org.l org.tab.h
 	flex -d org.l
 
 org_debug:bison_debug flex_debug
-	g++ org.tab.c lex.yy.c -ll -o org-parse
+	g++-4.2 org.tab.c lex.yy.c -ll -o org-parse
 
 test_debug: org_debug
 	prove -l t/parse.t
