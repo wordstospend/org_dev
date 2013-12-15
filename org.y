@@ -1,6 +1,7 @@
 %{
 #include <cstdio>
 #include <iostream>
+#include "org.h" // to get the node struct typedefs
 using namespace std;
 #define YYDEBUG 1 // debugger
 // stuff from flex that bison needs to know about:
@@ -98,6 +99,115 @@ object
 */
 
 %%
+
+todoNode * todo(char * state, char * whitespace) {
+    todoNode *node;
+    /* allocate node */
+    if ((node = (todoNode*)malloc(sizeof(todoNode))) == NULL)
+        {
+            yyerror("out of memory");
+        }
+    node->todo = (char*)malloc(sizeof(strlen(state)+1));
+    if (node->todo == NULL)
+        yyerror("out of memory");
+    strcpy(state, node->todo);
+
+    if (whitespace != NULL) {
+        node->whitespace = (char*)malloc(sizeof(strlen(whitespace) + 1));
+        if (node->whitespace == NULL)
+            yyerror("out of memory");
+        strcpy(whitespace, node->whitespace);
+    }
+    return node;
+}
+
+priorityNode * priority(char * state, char * whitespace) {
+    priorityNode *node;
+    /* allocate node */
+    if ((node = (priorityNode*)malloc(sizeof(priorityNode))) == NULL)
+        {
+            yyerror("out of memory");
+        }
+    node->priority = (char*)malloc(sizeof(strlen(state)+1));
+    if (node->priority == NULL)
+        yyerror("out of memory");
+    strcpy(state, node->priority);
+
+    if (whitespace != NULL) {
+        node->whitespace = (char*)malloc(sizeof(strlen(whitespace) + 1));
+        if (node->whitespace == NULL)
+            yyerror("out of memory");
+        strcpy(whitespace, node->whitespace);
+    }
+    return node;
+}
+
+titleNode * title(char * state, char * whitespace) {
+    titleNode *node;
+    /* allocate node */
+    if ((node = (titleNode*)malloc(sizeof(titleNode))) == NULL)
+        {
+            yyerror("out of memory");
+        }
+    node->title = (char*)malloc(sizeof(strlen(state)+1));
+    if (node->title == NULL)
+        yyerror("out of memory");
+    strcpy(state, node->title);
+
+    if (whitespace != NULL) {
+        node->whitespace = (char*)malloc(sizeof(strlen(whitespace) + 1));
+        if (node->whitespace == NULL)
+            yyerror("out of memory");
+        strcpy(whitespace, node->whitespace);
+    }
+    return node;
+}
+
+tagNode * tag(char * state, char * whitespace) {
+    tagNode * node;
+    /* allocate node */
+    if ((node = (tagNode*)malloc(sizeof(tagNode))) == NULL)
+        {
+            yyerror("out of memory");
+        }
+
+    node->tagsNode = NULL;
+
+    node->tag = (char*)malloc(sizeof(strlen(state)+1));
+    if (node->tag == NULL)
+        yyerror("out of memeory");
+    strcpy(state, node->tag);
+    if (whitespace != NULL)
+        {
+            node->whitespace = (char*)malloc(sizeof(strlen(whitespace) + 1));
+            if (node->whitespace == NULL)
+                yyerror("out of memory");
+            strcpy(whitespace, node->whitespace);
+        }
+    return node;
+}
+
+tagNode * tags(tagNode* tagList, char* state, char* whitespace) {
+    tagNode * node = tag(state, whitespace);
+    tagList->tagsNode = node;
+    return tagList;
+}
+
+headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
+                        titleNode * title, tagNode * tags ) {
+    headlineNode * node;
+    /* allocate node */
+    if ((node = (headlineNode*)malloc(sizeof(headlineNode))) == NULL)
+        {
+            yyerror("out of memory");
+        }
+    node->stars = stars;
+    node->todo = todo;
+    node->priority = priority;
+    node->title = title;
+    node->tags = tags;
+    return node;
+}
 
 main( int argc, const char* argv[] )
 {

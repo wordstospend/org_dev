@@ -19,11 +19,16 @@ to add a bit more machinery, maybe a prove script or some such thing
 ** TODO Testing Harness for AST result
 *** TODO output ast to file
 the basis for this work is /Users/nfair/Documents/personal_dev/LexAndYaccCode/calc3.y
-**** TODO define a set of nodes for the ast
+**** DONE define a set of nodes for the ast
 The question is for things such as 'priority' where it may or may not exist
 Should I create a struct to store the node then detect the nature of the struct
 in the parent rule action (in this case headline). Or can just do no action
 and if so can I detect the lack of value in the parent action
+***** DONE todoNode
+***** DONE priorityNode
+***** DONE titleNode
+***** DONE tagsNode
+***** DONE headlineNode
 **** TODO define functions that return them
 **** TODO define parser actions to call node creation funcitons
 **** TODO define a fuction that reads the ast and outputs it as an in-order traversal
