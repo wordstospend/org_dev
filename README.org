@@ -29,8 +29,8 @@ and if so can I detect the lack of value in the parent action
 ***** DONE titleNode
 ***** DONE tagsNode
 ***** DONE headlineNode
-**** TODO define functions that return them
-**** TODO define parser actions to call node creation funcitons
+**** DONE define functions that return them
+**** DONE define parser actions to call node creation funcitons
 **** TODO define a fuction that reads the ast and outputs it as an in-order traversal
 *** TODO compaire ast from file parser output
 ** TODO Unit test

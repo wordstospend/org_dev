@@ -9,7 +9,16 @@ extern "C" int yylex();
 extern "C" int yyparse();
 extern "C" FILE *yyin;
 
+todoNode * todo(char * state, char * whitespace);
+priorityNode * priority(char * state, char * whitespace);
+titleHeadNode * title(titleHeadNode * headNode, char * word);
+tagNode * tag(char * state, char * whitespace);
+tagNode * tags(tagNode* tagList, char* state, char* whitespace);
+headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
+                        titleHeadNode * title, tagNode * tags );
+documentNode * document(headlineNode * headline, documentNode * doc);
 void yyerror(const char *s);
+
 %}
 
 // Bison fundamentally works by asking flex to get the next token, which it
@@ -20,7 +29,13 @@ void yyerror(const char *s);
 %union {
 	int ival;
 	char *sval;
-}
+    todoNode *ptodo;
+    priorityNode *ppriority;
+    titleHeadNode *ptitle;
+    tagNode *ptags;
+    headlineNode *pheadline;
+    documentNode *pdoc;
+};
 
 // constant-string token
 %token ENDLN
@@ -44,36 +59,46 @@ void yyerror(const char *s);
 %token <sval> DRAWERKEY
 %token <sval> DRAWERVALUE
 %token <sval> DRAWEREND
-%token <sval> BLOCK /* The block of text following a list item. Where each line must
-have an indention to match the first character of the first */
+%token <sval> BLOCK /* The block of text following a list item. Where each line
+must have an indention to match the first character of the first */
+
+%type <ptodo> todo_keyword
+%type <pdoc> doc doc2
+%type <ppriority> priority
+%type <ptitle> title
+%type <ptags> tags
+%type <pheadline> headline
+
 %%
 
-doc:            SECTION doc2
-        |       headline doc
-        |       /* empty */
+doc:            SECTION doc2 { $$ = $2; }// no action yet section not implemented
+        |       headline doc { $$ = document($1, $2); }
+        |       /* empty */ { $$ = NULL; }
         ;
 
-doc2:           headline doc
-        |       /* empty */
+doc2:           headline doc { $$ = document($1, $2); }
+        |       /* empty */ { $$ = NULL; }
         ;
 
-headline:        STARS todo_keyword priority title tags
-
+headline:       STARS todo_keyword priority title tags
+                {
+                    $$ = headline($1, $2, $3, $4, $5);
+                }
         ;
 
-todo_keyword:   TODO WHITESPACE
-        |       TODO
-        |       /* empty */
+todo_keyword:   TODO WHITESPACE { $$ = todo($1, $2); }
+        |       TODO { $$ = todo($1, NULL); }
+        |       /* empty */ { $$ = NULL; }
         ;
 
-priority:       PRIORITY WHITESPACE
-        |       PRIORITY
-        |       /* empty */
+priority:       PRIORITY WHITESPACE { $$ = priority($1, $2); }
+        |       PRIORITY { $$ = priority($1, NULL); }
+        |       /* empty */ { $$ = NULL; }
         ;
 
-title:          title WORD
-        |       title WHITESPACE
-        |       WORD
+title:          title WORD { $$ = title($1, $2); }
+        |       title WHITESPACE { $$ = title($1, $2); }
+        |       WORD { $$ = title(NULL, $1); }
         ;
 
 /*title:         TITLE /* a headline is treated differently if the first word of the
@@ -84,9 +109,9 @@ title:          title WORD
   //      |      /* empty */
     //    ;
 
-tags:           tags TAG WHITESPACE
-        |       tags TAG
-        |      /* empty */
+tags:           tags TAG WHITESPACE { $$ = tags($1, $2, $3); }
+        |       tags TAG { $$ = tags($1, $2, NULL); }
+        |      /*empty */ { $$ = NULL; }
         ;
 
 
@@ -142,25 +167,43 @@ priorityNode * priority(char * state, char * whitespace) {
     return node;
 }
 
-titleNode * title(char * state, char * whitespace) {
-    titleNode *node;
-    /* allocate node */
-    if ((node = (titleNode*)malloc(sizeof(titleNode))) == NULL)
-        {
+titleHeadNode * title(titleHeadNode * headNode, char * word) {
+    if (headNode == NULL) {
+        titleHeadNode * node;
+        if ((node = (titleHeadNode*)malloc(sizeof(titleHeadNode))) == NULL)
+            {
+                yyerror("out of memeory");
+            }
+        node->word = (char*)malloc(sizeof(strlen(word)+1));
+        if (node->word == NULL)
+            yyerror("out of memory");
+        strcpy(word, node->word);
+        node->nextword = NULL;
+        node->endword = NULL;
+        return node;
+    }
+    else {
+        titleNode *node;
+        /* allocate node */
+        if ((node = (titleNode*)malloc(sizeof(titleNode))) == NULL)
+            {
             yyerror("out of memory");
         }
-    node->title = (char*)malloc(sizeof(strlen(state)+1));
-    if (node->title == NULL)
-        yyerror("out of memory");
-    strcpy(state, node->title);
-
-    if (whitespace != NULL) {
-        node->whitespace = (char*)malloc(sizeof(strlen(whitespace) + 1));
-        if (node->whitespace == NULL)
+        node->word = (char*)malloc(sizeof(strlen(word)+1));
+        if (node->word == NULL)
             yyerror("out of memory");
-        strcpy(whitespace, node->whitespace);
+        strcpy(word, node->word);
+        if (headNode->endword == NULL) {
+            headNode->nextword = node;
+        }
+        else {
+            headNode->endword->nextword = node;
+        }
+
+        headNode->endword = node;
+        return headNode;
     }
-    return node;
+
 }
 
 tagNode * tag(char * state, char * whitespace) {
@@ -194,7 +237,7 @@ tagNode * tags(tagNode* tagList, char* state, char* whitespace) {
 }
 
 headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
-                        titleNode * title, tagNode * tags ) {
+                        titleHeadNode * title, tagNode * tags ) {
     headlineNode * node;
     /* allocate node */
     if ((node = (headlineNode*)malloc(sizeof(headlineNode))) == NULL)
@@ -209,6 +252,17 @@ headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
     return node;
 }
 
+documentNode * document(headlineNode * headline, documentNode * doc) {
+    documentNode * node;
+    /* allocate node */
+    if ((node = (documentNode*)malloc(sizeof(documentNode))) == NULL)
+        {
+            yyerror("out of memory");
+        }
+    node->headline = headline;
+    node->doc = doc;
+
+}
 main( int argc, const char* argv[] )
 {
 	// Prints each argument on the command line.

@@ -3,8 +3,9 @@
 #include <iostream>
 using namespace std;
 #define YY_DECL extern "C" int yylex()
-
+#include "org.h"
 #include "org.tab.h"  // to get the token types that we return
+
 
 %}
 %s list

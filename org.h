@@ -16,11 +16,17 @@ typedef struct {
 } priorityNode;
 
 /* title */
-typedef struct {
-    char * title;
-    // optional
-    char * whitespace;
+
+typedef struct titleNodeStruct {
+    char * word;
+    struct titleNodeStruct * nextword;
 } titleNode;
+
+typedef struct titleHeadStruct {
+    char * word;
+    titleNode * nextword;
+    titleNode * endword;
+} titleHeadNode;;
 
 /* tags */
 typedef struct tagNodeStruct {
@@ -36,6 +42,12 @@ typedef struct {
     // optional
     todoNode * todo;
     priorityNode * priority;
-    titleNode * title;
+    titleHeadNode * title;
     tagNode * tags;
 } headlineNode;
+
+/* document - a linked list of headline */
+typedef struct documentNodeStruct {
+  headlineNode * headline;
+  documentNodeStruct * doc;
+} documentNode;
