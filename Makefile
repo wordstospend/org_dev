@@ -4,8 +4,8 @@ org.tab.c org.tab.h: org.y
 lex.yy.c: org.l org.tab.h
 	flex org.l
 
-org: lex.yy.c org.tab.c org.tab.h
-	g++-4.2 org.tab.c lex.yy.c -ll -o org-parse
+org: lex.yy.c org.tab.c org.tab.h org_debug.c
+	g++-4.2 org.tab.c lex.yy.c org_debug.c -ll -o org-parse
 
 test: org
 	prove -l t/parse.t

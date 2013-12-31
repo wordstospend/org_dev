@@ -18,7 +18,7 @@ headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
                         titleHeadNode * title, tagNode * tags );
 documentNode * document(headlineNode * headline, documentNode * doc);
 void yyerror(const char *s);
-
+int ex();
 %}
 
 // Bison fundamentally works by asking flex to get the next token, which it
@@ -70,6 +70,9 @@ must have an indention to match the first character of the first */
 %type <pheadline> headline
 
 %%
+
+document:       doc      { exit(0); }
+      ;
 
 doc:            SECTION doc2 { $$ = $2; }// no action yet section not implemented
         |       headline doc { $$ = document($1, $2); }
@@ -260,6 +263,9 @@ documentNode * document(headlineNode * headline, documentNode * doc) {
             yyerror("out of memory");
         }
     node->headline = headline;
+    if (doc == NULL){
+      cout << "ex " << ex() << '\n';
+    }
     node->doc = doc;
 
 }
