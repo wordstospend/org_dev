@@ -37,17 +37,21 @@ typedef struct tagNodeStruct {
 
 
 /* headline */
-typedef struct {
+typedef struct headlineNodeStruct {
     int stars;
     // optional
     todoNode * todo;
     priorityNode * priority;
     titleHeadNode * title;
     tagNode * tags;
+    // headline relationships
+    headlineNodeStruct * parent;
+    headlineNodeStruct * child;
+    headlineNodeStruct * sibling;
 } headlineNode;
 
 /* document - a linked list of headline */
 typedef struct documentNodeStruct {
-  headlineNode * headline;
-  documentNodeStruct * doc;
+    headlineNode * firstChild;
+    headlineNode * currentChild;
 } documentNode;

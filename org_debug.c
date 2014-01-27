@@ -24,11 +24,14 @@ void output_ast(FILE * outputfile, documentNode * node) {
 void output_documentNode(FILE * outputfile, documentNode * node) {
     printf("documentNode\n");
     fprintf(outputfile, "(DOCUMENT ");
-    if (node->headline != NULL) {
-        output_headline(outputfile, node->headline);
-    }
-    if (node->doc != NULL) {
-        output_documentNode(outputfile, node->doc);
+    headlineNode * child = node->firstChild;
+    while (child != NULL) {
+        output_headline(outputfile, child);
+        child = child->sibling;
+        if (child != NULL) {
+            // this is a purely formating change
+            fprintf(outputfile, " ");
+        }
     }
     fprintf(outputfile, ")");
 }
@@ -47,6 +50,11 @@ void output_headline(FILE * outputfile, headlineNode * node) {
     }
     if (node->tags != NULL){
         output_tagNode(outputfile, node->tags);
+    }
+    headlineNode * child = node->child;
+    while (child != NULL) {
+        output_headline(outputfile, child);
+        child = child->sibling;
     }
     fprintf(outputfile, ")");
 }

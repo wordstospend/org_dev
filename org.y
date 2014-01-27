@@ -16,7 +16,7 @@ tagNode * tag(char * state, char * whitespace);
 tagNode * tags(tagNode* tagList, char* state, char* whitespace);
 headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
                         titleHeadNode * title, tagNode * tags );
-documentNode * document(headlineNode * headline, documentNode * doc);
+ documentNode * document(documentNode * doc,headlineNode * headline);
 void yyerror(const char *s);
 FILE * astFile;
 void output_ast(FILE * outputFile, documentNode * node);
@@ -65,7 +65,7 @@ void output_ast(FILE * outputFile, documentNode * node);
 must have an indention to match the first character of the first */
 
 %type <ptodo> todo_keyword
-%type <pdoc> doc doc2
+%type <pdoc> doc //     doc2
 %type <ppriority> priority
 %type <ptitle> title
 %type <ptags> tags
@@ -82,13 +82,8 @@ document:       doc      {
                 }
       ;
 
-doc:            SECTION doc2 { $$ = $2; }// no action yet section not implemented
-        |       headline doc { $$ = document($1, $2); }
-        |       /* empty */ { $$ = NULL; }
-        ;
-
-doc2:           headline doc { $$ = document($1, $2); }
-        |       /* empty */ { $$ = NULL; }
+doc:            headline { $$ = document(NULL, $1); }
+        |       doc headline { $$ = document($1, $2); }
         ;
 
 headline:       STARS todo_keyword priority title tags
@@ -263,17 +258,51 @@ headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
     return node;
 }
 
-documentNode * document(headlineNode * headline, documentNode * doc) {
-    documentNode * node;
-    /* allocate node */
-    if ((node = (documentNode*)malloc(sizeof(documentNode))) == NULL)
-        {
-            yyerror("out of memory");
+documentNode * document(documentNode * doc, headlineNode * headline ) {
+    if (doc == NULL) {
+        printf("allocate Document\n");
+        /* allocate node */
+        if ((doc = (documentNode*)malloc(sizeof(documentNode))) == NULL)
+            {
+                yyerror("out of memory");
+            }
+        doc->firstChild = headline;
+        doc->currentChild = headline;
+    }
+    else {
+        printf("insert headline in Document\n");
+        if ( headline->stars > doc->currentChild->stars) {
+            // we found our parent
+            printf("insert headline as child\n");
+            doc->currentChild->child = headline;
+            headline->parent = doc->currentChild;
+            doc->currentChild = headline;
         }
-    node->headline = headline;
-    printf("IN Document\n");
-    node->doc = doc;
-    return node;
+        if (headline->stars == doc->currentChild->stars) {
+            // we found our sibling
+            printf("insert headline as sibling\n");
+            doc->currentChild->sibling = headline;
+            headline->parent = doc->currentChild->parent;
+            doc->currentChild = headline;
+
+        }
+        if (headline->stars < doc->currentChild->stars) {
+            // we could have found either our sibling or desendent
+            if (doc->currentChild->parent == NULL ||
+                doc->currentChild->parent->stars < headline->stars) { // sibling
+                printf("insert headline as null or <\n");
+                doc->currentChild->sibling = headline;
+                headline->parent = doc->currentChild->parent;
+                doc->currentChild = headline;
+            }
+            else {
+                printf("insert with recursive call\n");
+                doc->currentChild = doc->currentChild->parent;
+                doc = document(doc, headline);
+            }
+        }
+    }
+    return doc;
 }
 
 main( int argc, const char* argv[] )
