@@ -18,7 +18,9 @@ headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
                         titleHeadNode * title, tagNode * tags );
 documentNode * document(headlineNode * headline, documentNode * doc);
 void yyerror(const char *s);
-int ex();
+FILE * astFile;
+void output_ast(FILE * outputFile, documentNode * node);
+
 %}
 
 // Bison fundamentally works by asking flex to get the next token, which it
@@ -263,38 +265,59 @@ documentNode * document(headlineNode * headline, documentNode * doc) {
             yyerror("out of memory");
         }
     node->headline = headline;
+    printf("IN Document\n");
     if (doc == NULL){
-      cout << "ex " << ex() << '\n';
+      printf("pre astcall\n");
+      if (astFile != NULL) {
+        printf("calling output_ast\n");
+        output_ast(astFile, node);
+      }
     }
     node->doc = doc;
 
 }
+
 main( int argc, const char* argv[] )
 {
 	// Prints each argument on the command line.
-  	/*for( int i = 0; i < argc; i++ )
+  	for( int i = 0; i < argc; i++ )
     {
 		printf( "arg %d: %s\n", i, argv[i] );
-        }*/
+        }
 
-    FILE *myfile;
-    if (argc > 1) {
-      // we have a file name
-      myfile = fopen(argv[1], "r");
-    }
-    else {
-      myfile = fopen("test.org", "r");
-    }
-    //yydebug = 1;
-	// open a file handle to a particular file:
+    FILE *sourceFile = NULL;
+    //    FILE *astFile = NULL;
+    switch (argc)
+      {
+      case 1:
+        sourceFile = fopen("test.org", "r");
+        cout << "opening default test file" << endl;
+        break;
 
-	// make sure it is valid:
-	if (!myfile) {
-		cout << "I can't open test.org!" << endl;
+      case 3:
+        astFile = fopen(argv[2], "w");
+        cout << "opening passed ast file" << endl;
+        if (!astFile) {
+          cout << "cannot open \"" << argv[2] << "\"" << endl;
+          return -1;
+        }
+      case 2:
+        sourceFile = fopen(argv[1], "r");
+        cout << "opening passed source file" << endl;
+        break;
+      }
+
+    // make sure it is valid:
+	if (!sourceFile) {
+		cout << "I can't open source file" << endl;
 		return -1;
 	}
+
+    //yydebug = 1;
+
 	// set flex to read from it instead of defaulting to STDIN:
-	yyin = myfile;
+	yyin = sourceFile;
+
 
 	// parse through the input until there is no more:
 	do {
