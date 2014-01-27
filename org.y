@@ -268,13 +268,15 @@ documentNode * document(headlineNode * headline, documentNode * doc) {
     printf("IN Document\n");
     if (doc == NULL){
       printf("pre astcall\n");
+      fwrite(headline->title->word, sizeof(char), strlen(headline->title->word), stdout);
+      printf("\n");
       if (astFile != NULL) {
         printf("calling output_ast\n");
         output_ast(astFile, node);
       }
     }
     node->doc = doc;
-
+    return node;
 }
 
 main( int argc, const char* argv[] )
