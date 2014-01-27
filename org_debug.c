@@ -17,11 +17,12 @@ void output_todoNode(FILE * outputfile, todoNode * node);
 void output_ast(FILE * outputfile, documentNode * node) {
 
   printf("a simple test of ast output\n");
-  fprintf(outputfile, "A simpletest\n");
+  output_documentNode(outputfile, node);
 
 }
 
 void output_documentNode(FILE * outputfile, documentNode * node) {
+    printf("documentNode\n");
     fprintf(outputfile, "(DOCUMENT ");
     if (node->headline != NULL) {
         output_headline(outputfile, node->headline);
@@ -33,6 +34,7 @@ void output_documentNode(FILE * outputfile, documentNode * node) {
 }
 
 void output_headline(FILE * outputfile, headlineNode * node) {
+    printf("headline\n");
     fprintf(outputfile, "(HEADLINE (STARS %i) ", node->stars);
     if (node->todo != NULL) {
         output_todoNode(outputfile, node->todo);
@@ -50,6 +52,7 @@ void output_headline(FILE * outputfile, headlineNode * node) {
 }
 
 void output_todoNode(FILE * outputfile, todoNode * node) {
+    printf("todoNode\n");
     fprintf(outputfile, "(TODO ");
     fwrite (node->todo, sizeof(char), strlen(node->todo), outputfile);
     if (node->whitespace != NULL) {
@@ -64,6 +67,7 @@ void output_todoNode(FILE * outputfile, todoNode * node) {
 }
 
 void output_priorityNode(FILE * outputfile, priorityNode * node) {
+    printf("priorityNode\n");
     fprintf(outputfile, "(PRIORITY ");
     fwrite(node->priority, sizeof(char), strlen(node->priority), outputfile);
     if (node->whitespace != NULL) {
@@ -78,6 +82,7 @@ void output_priorityNode(FILE * outputfile, priorityNode * node) {
 }
 
 void output_tagNode(FILE * outputfile, tagNode * node) {
+    printf("tagNode\n");
     fprintf(outputfile, "(TAGS ");
     fwrite(node->tag, sizeof(char), strlen(node->tag), outputfile);
     if (node->tagsNode != NULL){
@@ -95,6 +100,8 @@ void output_tagNode(FILE * outputfile, tagNode * node) {
 }
 
 void output_titleNode(FILE * outputfile, titleNode * node) {
+    printf("titleNode\n");
+    printf("word \"%s\"\n", node->word);
     fwrite(node->word, sizeof(char), strlen(node->word), outputfile);
     if (node->nextword != NULL) {
         output_titleNode(outputfile, node->nextword);
@@ -102,6 +109,7 @@ void output_titleNode(FILE * outputfile, titleNode * node) {
 }
 
 void output_titleHeadNode(FILE * outputfile, titleHeadNode * node) {
+    printf("titleHeadNode\n");
     fprintf(outputfile, "(TITLE \"");
     fwrite(node->word, sizeof(char), strlen(node->word), outputfile);
     if (node->nextword != NULL) {

@@ -1,2 +1,2 @@
 * one headline
-* headline with a tag                                                 :@work:
+* headline with a tag
