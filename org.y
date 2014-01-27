@@ -140,13 +140,13 @@ todoNode * todo(char * state, char * whitespace) {
     node->todo = (char*)malloc(sizeof(strlen(state)+1));
     if (node->todo == NULL)
         yyerror("out of memory");
-    strcpy(state, node->todo);
+    strcpy(node->todo, state);
 
     if (whitespace != NULL) {
         node->whitespace = (char*)malloc(sizeof(strlen(whitespace) + 1));
         if (node->whitespace == NULL)
             yyerror("out of memory");
-        strcpy(whitespace, node->whitespace);
+        strcpy(node->whitespace, whitespace);
     }
     return node;
 }
@@ -161,13 +161,13 @@ priorityNode * priority(char * state, char * whitespace) {
     node->priority = (char*)malloc(sizeof(strlen(state)+1));
     if (node->priority == NULL)
         yyerror("out of memory");
-    strcpy(state, node->priority);
+    strcpy(node->priority, state);
 
     if (whitespace != NULL) {
         node->whitespace = (char*)malloc(sizeof(strlen(whitespace) + 1));
         if (node->whitespace == NULL)
             yyerror("out of memory");
-        strcpy(whitespace, node->whitespace);
+        strcpy(node->whitespace, whitespace);
     }
     return node;
 }
@@ -182,7 +182,7 @@ titleHeadNode * title(titleHeadNode * headNode, char * word) {
         node->word = (char*)malloc(sizeof(strlen(word)+1));
         if (node->word == NULL)
             yyerror("out of memory");
-        strcpy(word, node->word);
+        strcpy(node->word, word);
         node->nextword = NULL;
         node->endword = NULL;
         return node;
@@ -197,7 +197,7 @@ titleHeadNode * title(titleHeadNode * headNode, char * word) {
         node->word = (char*)malloc(sizeof(strlen(word)+1));
         if (node->word == NULL)
             yyerror("out of memory");
-        strcpy(word, node->word);
+        strcpy(node->word, word);
         if (headNode->endword == NULL) {
             headNode->nextword = node;
         }
@@ -224,13 +224,13 @@ tagNode * tag(char * state, char * whitespace) {
     node->tag = (char*)malloc(sizeof(strlen(state)+1));
     if (node->tag == NULL)
         yyerror("out of memeory");
-    strcpy(state, node->tag);
+    strcpy(node->tag, state);
     if (whitespace != NULL)
         {
             node->whitespace = (char*)malloc(sizeof(strlen(whitespace) + 1));
             if (node->whitespace == NULL)
                 yyerror("out of memory");
-            strcpy(whitespace, node->whitespace);
+            strcpy(node->whitespace, whitespace);
         }
     return node;
 }
