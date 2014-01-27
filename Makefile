@@ -19,7 +19,7 @@ flex_debug: org.l org.tab.h
 	flex -d org.l
 
 org_debug:bison_debug flex_debug
-	g++-4.2 org.tab.c lex.yy.c -ll -o org-parse
+	g++-4.2 org.tab.c lex.yy.c org_debug.c -ll -o org-parse
 
 test_debug: org_debug
 	prove -l t/parse.t
