@@ -266,15 +266,6 @@ documentNode * document(headlineNode * headline, documentNode * doc) {
         }
     node->headline = headline;
     printf("IN Document\n");
-    if (doc == NULL){
-      printf("pre astcall\n");
-      fwrite(headline->title->word, sizeof(char), strlen(headline->title->word), stdout);
-      printf("\n");
-      if (astFile != NULL) {
-        printf("calling output_ast\n");
-        output_ast(astFile, node);
-      }
-    }
     node->doc = doc;
     return node;
 }
@@ -315,7 +306,7 @@ main( int argc, const char* argv[] )
 		return -1;
 	}
 
-    //yydebug = 1;
+    yydebug = 1;
 
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = sourceFile;
