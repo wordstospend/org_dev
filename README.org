@@ -7,6 +7,7 @@ This is just a first bite at the apple
 ** DONE Parser org.y
 This seems to be mostly done I'm sure I've got some gaps but for now this
 looks like it is good enough
+** TODO parser V2 change order of docuement so it is top to bottom traversal
 ** TODO Lexer org.l
 This has a bunch of code but really needs to be from scratch. The current
 plan is add stubs for all of the tokens that will need to be output by the
@@ -17,7 +18,7 @@ should add a test case for that token
 We now can pass in a filename to the resulting org-parser but we still need
 to add a bit more machinery, maybe a prove script or some such thing
 ** TODO Testing Harness for AST result
-*** TODO output ast to file
+*** DONE output ast to file
 the basis for this work is /Users/nfair/Documents/personal_dev/LexAndYaccCode/calc3.y
 **** DONE define a set of nodes for the ast
 The question is for things such as 'priority' where it may or may not exist
@@ -31,7 +32,7 @@ and if so can I detect the lack of value in the parent action
 ***** DONE headlineNode
 **** DONE define functions that return them
 **** DONE define parser actions to call node creation funcitons
-**** TODO define a fuction that reads the ast and outputs it as an in-order traversal
+**** DONE define a fuction that reads the ast and outputs it as an in-order traversal
 *** TODO compaire ast from file parser output
 ** TODO Unit test
 * Objective C realease

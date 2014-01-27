@@ -73,7 +73,13 @@ must have an indention to match the first character of the first */
 
 %%
 
-document:       doc      { exit(0); }
+document:       doc      {
+  if (astFile != NULL) {
+                printf("calling output_ast\n");
+                output_ast(astFile, $1);
+                }
+                exit(0);
+                }
       ;
 
 doc:            SECTION doc2 { $$ = $2; }// no action yet section not implemented
