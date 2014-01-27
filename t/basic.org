@@ -1,5 +1,2 @@
-basic section
-
 * one headline
-with a section
-* TODOheadline without one
+* headline with a tag                                                 :@work:
