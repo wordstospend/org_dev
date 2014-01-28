@@ -1,3 +1,0 @@
-* this is a section free doc that has a headline without a title
-** TODO
-* The previous line
