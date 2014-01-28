@@ -5,3 +5,4 @@ lex.yy.c
 snazzle/*
 org.output
 org.old.l
+t/buffer.ast
