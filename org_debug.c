@@ -33,7 +33,7 @@ void output_documentNode(FILE * outputfile, documentNode * node) {
             fprintf(outputfile, " ");
         }
     }
-    fprintf(outputfile, ")");
+    fprintf(outputfile, ")\n");
 }
 
 void output_headline(FILE * outputfile, headlineNode * node) {

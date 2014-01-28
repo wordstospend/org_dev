@@ -6,6 +6,7 @@ use Pod::Usage();
 use Getopt::Long();
 use File::Spec::Functions;
 use File::Find;
+use File::Compare;
 
 =head1 NAME
 
@@ -35,6 +36,7 @@ Pod::Usage::pod2usage( -output => \*STDERR,
 
 my $org_dir = catdir(Cwd::cwd, qw( t ));
 my $parser = catfile(Cwd::cwd, qw( org-parse ));
+my $bufferFile = catfile(Cwd::cwd, qw(t/buffer.ast));
 
 sub runtest {
     my $test_case = $File::Find::fullname // $File::Find::name;
@@ -42,7 +44,7 @@ sub runtest {
         return;
     }
 
-    my @args = ($parser, $test_case);
+    my @args = ($parser, $test_case, $bufferFile);
     my $output;
     system(@args);
     if ($? == -1) {
@@ -54,9 +56,13 @@ sub runtest {
     }
     else {
         $output = $? >> 8;
-        #printf "child exited with value %d\n", $? >> 8;
+        printf "child exited with value %d\n", $? >> 8;
     }
     ok $output == 0, $test_case . " failed: $output";
+    my $test_control = $test_case;
+    $test_control =~ s/\.org/\.ast/g;
+    # for simplicty compaire equlity
+    ok compare($bufferFile, $test_control) == 0, $test_case . " ast invalid";
 }
 
 find( {
