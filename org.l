@@ -10,10 +10,11 @@ using namespace std;
 %}
 %s list
 %x headline
+%x tags
 headline_level ^\**[[:blank:]]
 todo (TODO|IN-PROGRESS|WAITING|DONE|CANCELLED)
 priority \[#[a-zA-Z]\]
-tags :([A-Za-z0-9_@#%]*:)+
+tag :[A-Za-z0-9_@#%]+:
 word [^\n[:blank:]]*
 whitespace [[:blank:]]*
 directive adirctivethatdoesntexist
@@ -35,6 +36,23 @@ directive adirctivethatdoesntexist
     return PRIORITY;
 }
 
+<headline,tags>{tag} {
+    //This is a capture of a tag witha trailing ':' which should be placed back
+    // on the input stream. Resulting in a trailing ':' after all
+    // tags are captured
+    BEGIN(tags);
+    yyless(yyleng - 1);
+    yyleng =- 1;
+    yylval.sval = yytext++;
+
+    return TAG;
+ }
+
+<tags>: {
+    // this is to capture the trailing context of ':' left at the end of a
+    // group of tags
+    BEGIN(headline);
+ }
 
 <headline>{word} {
     // word will always be strictly longer than the tags, priorty, or todo if those
