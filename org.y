@@ -138,6 +138,9 @@ todoNode * todo(char * state, char * whitespace) {
         {
             yyerror("out of memory");
         }
+    node->todo = NULL;
+    node->whitespace = NULL;
+
     node->todo = (char*)malloc(sizeof(strlen(state)+1));
     if (node->todo == NULL)
         yyerror("out of memory");
@@ -159,6 +162,9 @@ priorityNode * priority(char * state, char * whitespace) {
         {
             yyerror("out of memory");
         }
+    node->priority = NULL;
+    node->whitespace = NULL;
+
     node->priority = (char*)malloc(sizeof(strlen(state)+1));
     if (node->priority == NULL)
         yyerror("out of memory");
@@ -195,6 +201,8 @@ titleHeadNode * title(titleHeadNode * headNode, char * word) {
             {
             yyerror("out of memory");
         }
+        node->word = NULL;
+        node->nextword = NULL;
         node->word = (char*)malloc(sizeof(strlen(word)+1));
         if (node->word == NULL)
             yyerror("out of memory");
@@ -221,6 +229,8 @@ tagNode * tag(char * state, char * whitespace) {
         }
 
     node->tagsNode = NULL;
+    node->whitespace = NULL;
+    node->tag = NULL;
 
     node->tag = (char*)malloc(sizeof(strlen(state)+1));
     if (node->tag == NULL)
@@ -233,7 +243,7 @@ tagNode * tag(char * state, char * whitespace) {
                 yyerror("out of memory");
             strcpy(node->whitespace, whitespace);
         }
-    node->whitespace = NULL;
+
     return node;
 }
 
@@ -259,6 +269,9 @@ headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
     node->priority = priority;
     node->title = title;
     node->tags = tags;
+    node->parent = NULL;
+    node->child = NULL;
+    node->sibling = NULL;
     return node;
 }
 
