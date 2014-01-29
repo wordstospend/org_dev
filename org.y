@@ -233,11 +233,15 @@ tagNode * tag(char * state, char * whitespace) {
                 yyerror("out of memory");
             strcpy(node->whitespace, whitespace);
         }
+    node->whitespace = NULL;
     return node;
 }
 
 tagNode * tags(tagNode* tagList, char* state, char* whitespace) {
     tagNode * node = tag(state, whitespace);
+    if (tagList == NULL); {
+      return node;
+    }
     tagList->tagsNode = node;
     return tagList;
 }

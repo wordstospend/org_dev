@@ -41,10 +41,10 @@ directive adirctivethatdoesntexist
     // on the input stream. Resulting in a trailing ':' after all
     // tags are captured
     BEGIN(tags);
-    yyless(yyleng - 1);
-    yyleng =- 1;
-    yylval.sval = yytext++;
-
+    char * yycopy = strdup( yytext );
+    yycopy[yyleng-1] = '\0';
+    yylval.sval = ++yycopy;
+    unput(':');
     return TAG;
  }
 
