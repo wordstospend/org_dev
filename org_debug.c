@@ -90,26 +90,32 @@ void output_priorityNode(FILE * outputfile, priorityNode * node) {
 }
 
 void output_tagNode(FILE * outputfile, tagNode * node) {
-    printf("tagNode\n");
+  printf("tagNode %s\n", node->tag);
     fprintf(outputfile, "(TAGS ");
     fwrite(node->tag, sizeof(char), strlen(node->tag), outputfile);
+    printf("got to the end of this 1\n");
     if (node->tagsNode != NULL){
+      printf("got to the end of this 2\n");
         output_tagNode(outputfile, node->tagsNode);
     }
+    printf("got to the end of this 3\n");
     if (node->whitespace != NULL) {
+      printf("got to the end of this 4\n");
+      printf("whitespace really\"%s\"", node->whitespace);
         fprintf(outputfile, " \"");
         fwrite (node->whitespace, sizeof(char),
                 strlen(node->whitespace), outputfile);
         fprintf(outputfile,"\") ");
     }
     else {
+      printf("got to the end of this5\n");
         fprintf(outputfile, ")");
     }
 }
 
 void output_titleNode(FILE * outputfile, titleNode * node) {
     printf("titleNode\n");
-    printf("word \"%s\"\n", node->word);
+    printf("word \"%s\" %zu\n", node->word, strlen(node->word));
     fwrite(node->word, sizeof(char), strlen(node->word), outputfile);
     if (node->nextword != NULL) {
         output_titleNode(outputfile, node->nextword);

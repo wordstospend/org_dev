@@ -27,12 +27,12 @@ directive adirctivethatdoesntexist
 }
 
 <headline>{todo} {
-    yylval.sval = yytext;
+    yylval.sval = strdup(yytext);
     return TODO;
  }
 
 <headline>{priority} {
-    yylval.sval = yytext;
+    yylval.sval = strdup(yytext);
     return PRIORITY;
 }
 
@@ -41,10 +41,10 @@ directive adirctivethatdoesntexist
     // on the input stream. Resulting in a trailing ':' after all
     // tags are captured
     BEGIN(tags);
-    char * yycopy = strdup( yytext );
-    yycopy[yyleng-1] = '\0';
-    yylval.sval = ++yycopy;
+    yytext[yyleng -1] = '\0';
+    yylval.sval = strdup(++yytext);
     unput(':');
+
     return TAG;
  }
 
@@ -59,12 +59,12 @@ directive adirctivethatdoesntexist
     // are not followed by a spaces eg 'DONEIsNotATodoState' where it will match a
     // word rather than a todo because of the length
 
-    yylval.sval = yytext;
+    yylval.sval = strdup(yytext);
     return WORD;
 }
 
 <headline>[[:blank:]]+ {
-    yylval.sval = yytext;
+    yylval.sval = strdup(yytext);
     return WHITESPACE;
 }
 
