@@ -82,34 +82,26 @@ void output_priorityNode(FILE * outputfile, priorityNode * node) {
         fprintf(outputfile, " \"");
         fwrite (node->whitespace, sizeof(char),
                 strlen(node->whitespace), outputfile);
-        fprintf(outputfile,"\") ");
+        fprintf(outputfile,"\")");
     }
     else {
-        fprintf(outputfile, ") ");
+        fprintf(outputfile, ")");
     }
 }
 
 void output_tagNode(FILE * outputfile, tagNode * node) {
-  printf("tagNode %s\n", node->tag);
-    fprintf(outputfile, "(TAGS ");
+    printf("tagNode %s\n", node->tag);
     fwrite(node->tag, sizeof(char), strlen(node->tag), outputfile);
-    printf("got to the end of this 1\n");
-    if (node->tagsNode != NULL){
-      printf("got to the end of this 2\n");
-        output_tagNode(outputfile, node->tagsNode);
+    if (node->nextTagNode != NULL){
+      fprintf(outputfile, " ");
+      output_tagNode(outputfile, node->nextTagNode);
     }
-    printf("got to the end of this 3\n");
     if (node->whitespace != NULL) {
-      printf("got to the end of this 4\n");
-      printf("whitespace really\"%s\"", node->whitespace);
+      printf("whitespace \"%s\"", node->whitespace);
         fprintf(outputfile, " \"");
         fwrite (node->whitespace, sizeof(char),
                 strlen(node->whitespace), outputfile);
-        fprintf(outputfile,"\") ");
-    }
-    else {
-      printf("got to the end of this5\n");
-        fprintf(outputfile, ") ");
+        fprintf(outputfile,"\"");
     }
 }
 

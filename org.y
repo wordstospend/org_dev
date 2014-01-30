@@ -115,9 +115,9 @@ title:          title WORD {printf("word %s\n", $2); $$ = title($1, $2); }
   //      |      /* empty */
     //    ;
 
-tags:           tags TAG WHITESPACE { printf("WTF a tag? %s \"%s\"",$2, $3); $$ = tags($1, $2, $3); }
-|       tags TAG { printf("tag retrieved %s\n", $2);$$ = tags($1, $2, NULL); }
-        |      /*empty */ { $$ = NULL; }
+tags:          // matags TAG WHITESPACE { printf("WTF a tag? %s \"%s\"",$2, $3); $$ = tags($1, $2, $3); }
+               tags TAG { printf("tag retrieved %s\n", $2);$$ = tags($1, $2, NULL); }
+        |      /*empty */ { printf("empty tag fired\n"); $$ = NULL; }
         ;
 
 
@@ -209,7 +209,7 @@ tagNode * tag(char * state, char * whitespace) {
             yyerror("out of memory");
     }
 
-    node->tagsNode = NULL;
+    node->nextTagNode = NULL;
     node->whitespace = NULL;
     node->tag = NULL;
 
@@ -224,11 +224,19 @@ tagNode * tag(char * state, char * whitespace) {
 
 tagNode * tags(tagNode* tagList, char* state, char* whitespace) {
     tagNode * node = tag(state, whitespace);
-    if (tagList == NULL); {
-      return node;
+    if (tagList == NULL) {
+        printf("returning the single tag %s\n", node->tag);
+        return node;
     }
-    tagList->tagsNode = node;
-    return tagList;
+    else {
+        tagNode * lastNode = tagList;
+        while(lastNode->nextTagNode != NULL) {
+            lastNode = lastNode->nextTagNode;
+        }
+        lastNode->nextTagNode = node;
+        return tagList;
+    }
+
 }
 
 headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,

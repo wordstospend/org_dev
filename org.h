@@ -32,7 +32,7 @@ typedef struct titleHeadStruct {
 typedef struct tagNodeStruct {
     char * tag;
     char * whitespace;
-    struct tagNodeStruct * tagsNode;
+    struct tagNodeStruct * nextTagNode;
 } tagNode;
 
 
