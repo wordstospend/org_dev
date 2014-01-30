@@ -278,7 +278,7 @@ documentNode * document(documentNode * doc, headlineNode * headline ) {
             headline->parent = doc->currentChild;
             doc->currentChild = headline;
         }
-        if (headline->stars == doc->currentChild->stars) {
+        else if (headline->stars == doc->currentChild->stars) {
             // we found our sibling
             printf("insert headline as sibling\n");
             doc->currentChild->sibling = headline;
@@ -286,7 +286,7 @@ documentNode * document(documentNode * doc, headlineNode * headline ) {
             doc->currentChild = headline;
 
         }
-        if (headline->stars < doc->currentChild->stars) {
+        else if (headline->stars < doc->currentChild->stars) {
             // we could have found either our sibling or desendent
             if (doc->currentChild->parent == NULL ||
                 doc->currentChild->parent->stars < headline->stars) { // sibling
