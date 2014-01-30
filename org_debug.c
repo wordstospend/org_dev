@@ -64,8 +64,9 @@ void output_headline(FILE * outputfile, headlineNode * node) {
 
 void output_todoNode(FILE * outputfile, todoNode * node) {
     printf("todoNode\n");
-    fprintf(outputfile, "(TODO ");
+    fprintf(outputfile, "(TODO \"");
     fwrite (node->todo, sizeof(char), strlen(node->todo), outputfile);
+    fprintf(outputfile, "\"");
     if (node->whitespace != NULL) {
         fprintf(outputfile, " \"");
         fwrite (node->whitespace, sizeof(char),

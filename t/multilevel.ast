@@ -1,1 +1,1 @@
-(DOCUMENT (HEADLINE (STARS 1) (TITLE "level one                                                           ") (TAGS @work) (HEADLINE (STARS 2) (TITLE "level two"))))
+(DOCUMENT (HEADLINE (STARS 1) (TITLE "level one                                                           ") (TAGS @work) (HEADLINE (STARS 2) (TITLE "level two"))) (HEADLINE (STARS 1) (TITLE "just another level") (HEADLINE (STARS 2) (TITLE "seccond level 2"))))
