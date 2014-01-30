@@ -23,40 +23,43 @@ void output_ast(FILE * outputfile, documentNode * node) {
 
 void output_documentNode(FILE * outputfile, documentNode * node) {
     printf("documentNode\n");
-    fprintf(outputfile, "(DOCUMENT ");
+    fprintf(outputfile, "(DOCUMENT");
     headlineNode * child = node->firstChild;
     while (child != NULL) {
+        fprintf(outputfile, " ");
         output_headline(outputfile, child);
         child = child->sibling;
-        if (child != NULL) {
-            // this is a purely formating change
-            fprintf(outputfile, " ");
-        }
     }
     fprintf(outputfile, ")\n");
 }
 
 void output_headline(FILE * outputfile, headlineNode * node) {
     printf("headline\n");
-    fprintf(outputfile, "(HEADLINE (STARS %i) ", node->stars);
+    fprintf(outputfile, "(HEADLINE (STARS %i)", node->stars);
     if (node->todo != NULL) {
+        fprintf(outputfile, " ");
         output_todoNode(outputfile, node->todo);
     }
     if (node->priority != NULL){
+        fprintf(outputfile, " ");
         output_priorityNode(outputfile, node->priority);
     }
     if (node->title != NULL){
+        fprintf(outputfile, " ");
         output_titleHeadNode(outputfile, node->title);
     }
     if (node->tags != NULL){
+        fprintf(outputfile, " (TAGS ");
         output_tagNode(outputfile, node->tags);
+        fprintf(outputfile, ")");
     }
     headlineNode * child = node->child;
     while (child != NULL) {
+        fprintf(outputfile, " ");
         output_headline(outputfile, child);
         child = child->sibling;
     }
-    fprintf(outputfile, ") ");
+    fprintf(outputfile, ")");
 }
 
 void output_todoNode(FILE * outputfile, todoNode * node) {
@@ -67,10 +70,10 @@ void output_todoNode(FILE * outputfile, todoNode * node) {
         fprintf(outputfile, " \"");
         fwrite (node->whitespace, sizeof(char),
                 strlen(node->whitespace), outputfile);
-        fprintf(outputfile,"\") ");
+        fprintf(outputfile,"\")");
     }
     else {
-        fprintf(outputfile, ") ");
+        fprintf(outputfile, ")");
     }
 }
 
@@ -121,5 +124,5 @@ void output_titleHeadNode(FILE * outputfile, titleHeadNode * node) {
     if (node->nextword != NULL) {
         output_titleNode(outputfile, node->nextword);
     }
-    fprintf(outputfile, "\") ");
+    fprintf(outputfile, "\")");
 }
