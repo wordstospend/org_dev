@@ -1,1 +1,1 @@
-(DOCUMENT (HEADLINE (STARS 1) (TITLE "a headline with a tag                                               ") (TAGS @work) ) )
+(DOCUMENT (HEADLINE (STARS 1) (TITLE "a headline with a tag                                               ") (TAGS @work)))

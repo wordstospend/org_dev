@@ -341,7 +341,7 @@ main( int argc, const char* argv[] )
 		return -1;
 	}
 
-        yydebug = 1;
+    //        yydebug = 1;
 
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = sourceFile;
