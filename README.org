@@ -58,3 +58,52 @@ how do I know if I am seperated from  the next thing?
 I got this
 
 How do I deal with the title? Maybe what I do is have words and white space.
+
+* Org structure notes from org-element.el
+** TODO Greater Elements [0/12]
+- [ ] `center-block'
+- [ ] `drawer'
+- [ ] `dynamic-block'
+- [ ] `footnote-definition'
+- [ ] `headline'
+- [ ] `inlinetask'
+- [ ] `item'
+- [ ] `plain-list'
+- [ ] `property-drawer'
+- [ ] `quote-block'
+- [ ] `section'
+- [ ] `special-block'
+** TODO Elements [0/19]
+- [ ] `babel-call'
+- [ ] `clock'
+- [ ] `comment'
+- [ ] `comment-block'
+- [ ] `diary-sexp'
+- [ ] `example-block'
+- [ ] `export-block'
+- [ ] `fixed-width'
+- [ ] `horizontal-rule'
+- [ ] `keyword'
+- [ ] `latex-environment'
+- [ ] `node-property'
+- [ ] `paragraph'
+- [ ] `planning'
+- [ ] `quote-section'
+- [ ] `src-block'
+- [ ] `table'
+- [ ] `table-row'
+- [ ] `verse-block'
+Among them,`paragraph' and `verse-block' types can contain Org objects and plain text.
+** Objects
+;; Objects are related to document's contents. Some of them are
+;; recursive. Associated types are of the following: `bold', `code',
+;; `entity', `export-snippet', `footnote-reference',
+;; `inline-babel-call', `inline-src-block', `italic',
+;; `latex-fragment', `line-break', `link', `macro', `radio-target',
+;; `statistics-cookie', `strike-through', `subscript', `superscript',
+;; `table-cell', `target', `timestamp', `underline' and `verbatim'.
+;;
+;; Some elements also have special properties whose value can hold
+;; objects themselves (i.e. an item tag or a headline name). Such
+;; values are called "secondary strings". Any object belongs to
+;; either an element or a secondary string.
