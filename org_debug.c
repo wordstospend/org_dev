@@ -56,7 +56,7 @@ void output_headline(FILE * outputfile, headlineNode * node) {
         output_headline(outputfile, child);
         child = child->sibling;
     }
-    fprintf(outputfile, ")");
+    fprintf(outputfile, ") ");
 }
 
 void output_todoNode(FILE * outputfile, todoNode * node) {
@@ -70,7 +70,7 @@ void output_todoNode(FILE * outputfile, todoNode * node) {
         fprintf(outputfile,"\") ");
     }
     else {
-        fprintf(outputfile, ")");
+        fprintf(outputfile, ") ");
     }
 }
 
@@ -85,7 +85,7 @@ void output_priorityNode(FILE * outputfile, priorityNode * node) {
         fprintf(outputfile,"\") ");
     }
     else {
-        fprintf(outputfile, ")");
+        fprintf(outputfile, ") ");
     }
 }
 
@@ -109,7 +109,7 @@ void output_tagNode(FILE * outputfile, tagNode * node) {
     }
     else {
       printf("got to the end of this5\n");
-        fprintf(outputfile, ")");
+        fprintf(outputfile, ") ");
     }
 }
 
@@ -129,5 +129,5 @@ void output_titleHeadNode(FILE * outputfile, titleHeadNode * node) {
     if (node->nextword != NULL) {
         output_titleNode(outputfile, node->nextword);
     }
-    fprintf(outputfile, "\")");
+    fprintf(outputfile, "\") ");
 }
