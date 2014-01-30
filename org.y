@@ -104,7 +104,7 @@ priority:       PRIORITY WHITESPACE { $$ = priority($1, $2); }
 
 title:          title WORD {printf("word %s\n", $2); $$ = title($1, $2); }
         |       title WHITESPACE { printf("whitespace \"%s\"\n", $2); $$ = title($1, $2); }
-|       WORD { printf("word %s\n", $1); $$ = title(NULL, $1); }
+        |       WORD { printf("word %s\n", $1); $$ = title(NULL, $1); }
         ;
 
 /*title:         TITLE /* a headline is treated differently if the first word of the
@@ -115,8 +115,8 @@ title:          title WORD {printf("word %s\n", $2); $$ = title($1, $2); }
   //      |      /* empty */
     //    ;
 
-tags:          // matags TAG WHITESPACE { printf("WTF a tag? %s \"%s\"",$2, $3); $$ = tags($1, $2, $3); }
-               tags TAG { printf("tag retrieved %s\n", $2);$$ = tags($1, $2, NULL); }
+tags:   tags TAG WHITESPACE { printf("WTF a tag? %s \"%s\"",$2, $3); $$ = tags($1, $2, $3); }
+        |       tags TAG { printf("tag retrieved %s\n", $2);$$ = tags($1, $2, NULL); }
         |      /*empty */ { printf("empty tag fired\n"); $$ = NULL; }
         ;
 
