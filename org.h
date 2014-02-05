@@ -36,6 +36,15 @@ typedef struct tagNodeStruct {
 } tagNode;
 
 
+/* section
+   In the future this will be a more complete model
+   as of right now it just needs to be a string
+*/
+typedef struct {
+    char * body;
+} sectionNode;
+
+
 /* headline */
 typedef struct headlineNodeStruct {
     int stars;
@@ -44,14 +53,18 @@ typedef struct headlineNodeStruct {
     priorityNode * priority;
     titleHeadNode * title;
     tagNode * tags;
+    char * post_blank;
     // headline relationships
     headlineNodeStruct * parent;
     headlineNodeStruct * child;
     headlineNodeStruct * sibling;
+    // section
+    sectionNode * section;
 } headlineNode;
 
 /* document - a linked list of headline */
 typedef struct documentNodeStruct {
+    sectionNode * leadingSection;
     headlineNode * firstChild;
     headlineNode * currentChild;
 } documentNode;

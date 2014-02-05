@@ -16,7 +16,10 @@ tagNode * tag(char * state, char * whitespace);
 tagNode * tags(tagNode* tagList, char* state, char* whitespace);
 headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
                         titleHeadNode * title, tagNode * tags );
- documentNode * document(documentNode * doc,headlineNode * headline);
+documentNode * document(documentNode * doc, headlineNode * headline);
+documentNode * apendToLastChild(documentNode * doc, char * blankSpace);
+documentNode * documentFromSection(documentNode *doc, char * section);
+
 void yyerror(const char *s);
 FILE * astFile;
 void output_ast(FILE * outputFile, documentNode * node);
@@ -54,15 +57,12 @@ void output_ast(FILE * outputFile, documentNode * node);
 %token <sval> TAG
 %token <sval> WORD
 %token <sval> MARKER
-%token <ival> DEDENT
-%token <ival> INDENT
 %token <sval> TODO
 %token <sval> DRAWERSTART
 %token <sval> DRAWERKEY
 %token <sval> DRAWERVALUE
 %token <sval> DRAWEREND
-%token <sval> BLOCK /* The block of text following a list item. Where each line
-must have an indention to match the first character of the first */
+%token <sval> POST_BLANK
 
 %type <ptodo> todo_keyword
 %type <pdoc> doc //     doc2
@@ -70,6 +70,7 @@ must have an indention to match the first character of the first */
 %type <ptitle> title
 %type <ptags> tags
 %type <pheadline> headline
+%type <sval> section
 
 %%
 
@@ -80,12 +81,20 @@ document:       doc      {
                 }
                 exit(0);
                 }
-      ;
+        ;
 
 doc:            headline { $$ = document(NULL, $1); }
         |       doc headline { $$ = document($1, $2); }
+        |       doc POST_BLANK { $$ = apendToLastChild($1,$2); }
+        |       section { $$ = documentFromSection(NULL, $1); }
+        |       doc section { $$ = documentFromSection($1, $2); }
         ;
+// The last 2 rules allow for an impossible scenario of a section followed by a section
+// this will mean that it is gramaticly possible, but it is not in fact lexically possible
 
+// as of right now this is not very complicated
+section:        SECTION { $$ = $1; }
+        ;
 headline:       STARS todo_keyword priority title tags
                 {
                     $$ = headline($1, $2, $3, $4, $5);
@@ -255,6 +264,7 @@ headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
     node->parent = NULL;
     node->child = NULL;
     node->sibling = NULL;
+    node->post_blank = NULL;
     return node;
 }
 
@@ -305,6 +315,28 @@ documentNode * document(documentNode * doc, headlineNode * headline ) {
     return doc;
 }
 
+
+documentNode * apendToLastChild(documentNode * doc, char * blankSpace) {
+    doc->currentChild->post_blank = blankSpace;
+    return doc;
+}
+
+
+documentNode * documentFromSection(documentNode *doc, char * section) {
+    if (doc == NULL ) {
+        printf("allocate Document\n");
+        /* allocate node */
+        if ((doc = (documentNode*)malloc(sizeof(documentNode))) == NULL)
+            {
+                yyerror("out of memory");
+            }
+        doc->firstChild = headline;
+        doc->currentChild = headline;
+    }
+    else {
+
+    }
+}
 main( int argc, const char* argv[] )
 {
 	// Prints each argument on the command line.

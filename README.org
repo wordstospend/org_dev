@@ -58,29 +58,38 @@ how do I know if I am seperated from  the next thing?
 I got this
 
 How do I deal with the title? Maybe what I do is have words and white space.
-
 * Org structure notes from org-element.el
-** TODO Greater Elements [0/12]
-- [ ] `center-block'
-- [ ] `drawer'
-- [ ] `dynamic-block'
+Greater Elements/Elements/Objects can be thought of as a node of the type
+(TYPE, PROPERTY, CONTENTS)
+Universal properties
+- :begin
+- :end ::  the beginning and ending buffer positions of the considered element or object
+- :post-blank ::  which holds the number of blank lines, or white spaces at its end
+- :parent
+** TODO Greater Elements [0/9]
+- [ ] blocks :: #+BEGIN_NAME ... #+END_NAME
+  - [ ] `center-block'
+  - [ ] `dynamic-block' ::#+BEGIN: block_name :paramkey1 param1 ...
+  - [ ] `quote-block'
+  - [ ] `special-block' :: has many names which are used by differnt exporter backends
+- [ ] `drawer' :: ^[\t ]*\:(PROPERTIES|CLOCK|LOGBOOK|RESULT):[\t ]*$ some lines later ^[\t ]*:END:[\t ]*$
 - [ ] `footnote-definition'
 - [ ] `headline'
 - [ ] `inlinetask'
 - [ ] `item'
 - [ ] `plain-list'
 - [ ] `property-drawer'
-- [ ] `quote-block'
 - [ ] `section'
-- [ ] `special-block'
 ** TODO Elements [0/19]
+- [ ] `comment-block'
+- [ ] `example-block'
+- [ ] `export-block'
+- [ ] `src-block'
+- [ ] `verse-block'
 - [ ] `babel-call'
 - [ ] `clock'
 - [ ] `comment'
-- [ ] `comment-block'
 - [ ] `diary-sexp'
-- [ ] `example-block'
-- [ ] `export-block'
 - [ ] `fixed-width'
 - [ ] `horizontal-rule'
 - [ ] `keyword'
@@ -89,10 +98,8 @@ How do I deal with the title? Maybe what I do is have words and white space.
 - [ ] `paragraph'
 - [ ] `planning'
 - [ ] `quote-section'
-- [ ] `src-block'
 - [ ] `table'
 - [ ] `table-row'
-- [ ] `verse-block'
 Among them,`paragraph' and `verse-block' types can contain Org objects and plain text.
 ** Objects
 ;; Objects are related to document's contents. Some of them are

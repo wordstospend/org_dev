@@ -12,6 +12,8 @@ using namespace std;
 %x headline
 %x tag_block
 headline_level ^\**[[:blank:]]
+blankLines ([[:blank:]\t]*\n)+
+section ([[:blank:]]*.+[[:blank:]]*\n)+
 todo (TODO|IN-PROGRESS|WAITING|DONE|CANCELLED)
 priority \[#[a-zA-Z]\]
 tags :([A-Za-z0-9_@#%]+:)+
@@ -25,6 +27,15 @@ directive adirctivethatdoesntexist
     yylval.ival = yyleng -1;
     BEGIN(headline);
     return STARS ;
+}
+{section} {
+  yylval.sval = strdup(yytext);
+  return SECTION;
+}
+
+{blankLines} {
+    yylval.sval = strdup(yytext);
+    return POST_BLANK;
 }
 
 <headline>{todo} {
