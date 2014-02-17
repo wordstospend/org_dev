@@ -42,6 +42,7 @@ typedef struct tagNodeStruct {
 */
 typedef struct {
     char * body;
+    char * postBlank;
 } sectionNode;
 
 
@@ -53,7 +54,7 @@ typedef struct headlineNodeStruct {
     priorityNode * priority;
     titleHeadNode * title;
     tagNode * tags;
-    char * post_blank;
+    char * postBlank;
     // headline relationships
     headlineNodeStruct * parent;
     headlineNodeStruct * child;

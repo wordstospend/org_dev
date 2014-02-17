@@ -1,4 +1,2 @@
 * one headline
-
-
 * headline with a tag

@@ -17,8 +17,9 @@ tagNode * tags(tagNode* tagList, char* state, char* whitespace);
 headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
                         titleHeadNode * title, tagNode * tags );
 documentNode * document(documentNode * doc, headlineNode * headline);
+sectionNode * section(char * body);
 documentNode * apendToLastChild(documentNode * doc, char * blankSpace);
-documentNode * documentFromSection(documentNode *doc, char * section);
+documentNode * documentFromSection(documentNode *doc, char * sectionString);
 
 void yyerror(const char *s);
 FILE * astFile;
@@ -197,7 +198,7 @@ titleHeadNode * title(titleHeadNode * headNode, char * word) {
         node->nextword = NULL;
         node->word = word;
 
-        printf("What word did I get\"%s\" %zu\n", node->word, strlen(node->word));
+         printf("What word did I get\"%s\" %zu\n", node->word, strlen(node->word));
         if (headNode->endword == NULL) {
             headNode->nextword = node;
         }
@@ -264,7 +265,8 @@ headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
     node->parent = NULL;
     node->child = NULL;
     node->sibling = NULL;
-    node->post_blank = NULL;
+    node->postBlank = NULL;
+    node->section = NULL;
     return node;
 }
 
@@ -278,6 +280,8 @@ documentNode * document(documentNode * doc, headlineNode * headline ) {
             }
         doc->firstChild = headline;
         doc->currentChild = headline;
+        doc->leadingSection = NULL;
+
     }
     else {
         printf("insert headline in Document\n");
@@ -316,27 +320,44 @@ documentNode * document(documentNode * doc, headlineNode * headline ) {
 }
 
 
+sectionNode * section(char * body) {
+  sectionNode * sec = (sectionNode*)malloc(sizeof(sectionNode));
+  if (sec == NULL) {
+    yyerror("out of memory");
+  }
+  else {
+    sec->body = body;
+    sec->postBlank = NULL;
+    return sec;
+  }
+}
+
 documentNode * apendToLastChild(documentNode * doc, char * blankSpace) {
-    doc->currentChild->post_blank = blankSpace;
+    doc->currentChild->postBlank = blankSpace;
     return doc;
 }
 
 
-documentNode * documentFromSection(documentNode *doc, char * section) {
+documentNode * documentFromSection(documentNode *doc, char * sectionString) {
     if (doc == NULL ) {
-        printf("allocate Document\n");
+        printf("allocate Document for section\n");
         /* allocate node */
+
         if ((doc = (documentNode*)malloc(sizeof(documentNode))) == NULL)
             {
                 yyerror("out of memory");
             }
-        doc->firstChild = headline;
-        doc->currentChild = headline;
+        sectionNode * sec = section(sectionString);
+        doc->leadingSection = sec;
+        doc->firstChild = NULL;
+        doc->currentChild = NULL;
     }
     else {
-
+      sectionNode * sec = section(sectionString);
+      doc->currentChild->section = sec;
     }
 }
+
 main( int argc, const char* argv[] )
 {
 	// Prints each argument on the command line.
