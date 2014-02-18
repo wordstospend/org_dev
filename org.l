@@ -13,7 +13,7 @@ using namespace std;
 %x tag_block
 headline_level ^\**[[:blank:]]
 blankLines ([[:blank:]\t]*\n)+
-section (([^*]|[[:blank:]])+(.*[[:blank:]]*)*\n)+
+section ([^*\n]+.*\n)+
 todo (TODO|IN-PROGRESS|WAITING|DONE|CANCELLED)
 priority \[#[a-zA-Z]\]
 tags :([A-Za-z0-9_@#%]+:)+

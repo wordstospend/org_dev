@@ -1,1 +1,3 @@
-(DOCUMENT (HEADLINE (STARS 1) (TITLE "going to have one seciton") (SECTION "for this is a way to go")) (HEADLINE (STARS 1) (TITLE "followed by a one more")))
+(DOCUMENT (HEADLINE (STARS 1) (TITLE "going to have one seciton") (SECTION "for this is a way to go
+and so on *
+")) (HEADLINE (STARS 1) (TITLE "followed by a one more")))
