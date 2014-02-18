@@ -94,7 +94,10 @@ doc:            headline { $$ = document(NULL, $1); }
 // this will mean that it is gramaticly possible, but it is not in fact lexically possible
 
 // as of right now this is not very complicated
-section:        SECTION { $$ = $1; }
+section:        SECTION {
+    printf("section\n");
+     $$ = $1;
+ }
         ;
 headline:       STARS todo_keyword priority title tags
                 {
@@ -333,6 +336,7 @@ sectionNode * section(char * body) {
 }
 
 documentNode * apendToLastChild(documentNode * doc, char * blankSpace) {
+    printf("post apendToLastChild\n");
     doc->currentChild->postBlank = blankSpace;
     return doc;
 }
@@ -353,9 +357,12 @@ documentNode * documentFromSection(documentNode *doc, char * sectionString) {
         doc->currentChild = NULL;
     }
     else {
+      printf("adding section to doc\n");
+      printf("section \"%s\"\n", sectionString);
       sectionNode * sec = section(sectionString);
       doc->currentChild->section = sec;
     }
+    return doc;
 }
 
 main( int argc, const char* argv[] )

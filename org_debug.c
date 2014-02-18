@@ -12,7 +12,7 @@ void output_tagNode(FILE * outputfile, tagNode * node);
 void output_titleNode(FILE * outputfile, titleNode * node);
 void output_titleHeadNode(FILE * outputfile, titleHeadNode * node);
 void output_todoNode(FILE * outputfile, todoNode * node);
-
+void output_section(FILE * outputfile, sectionNode * node);
 
 void output_ast(FILE * outputfile, documentNode * node) {
 
@@ -23,6 +23,7 @@ void output_ast(FILE * outputfile, documentNode * node) {
 
 void output_documentNode(FILE * outputfile, documentNode * node) {
     printf("documentNode\n");
+    if(node->currentChild != NULL) { printf("WTF");}
     fprintf(outputfile, "(DOCUMENT");
     headlineNode * child = node->firstChild;
     while (child != NULL) {
@@ -40,18 +41,22 @@ void output_headline(FILE * outputfile, headlineNode * node) {
         fprintf(outputfile, " ");
         output_todoNode(outputfile, node->todo);
     }
-    if (node->priority != NULL){
+    if (node->priority != NULL) {
         fprintf(outputfile, " ");
         output_priorityNode(outputfile, node->priority);
     }
-    if (node->title != NULL){
+    if (node->title != NULL) {
         fprintf(outputfile, " ");
         output_titleHeadNode(outputfile, node->title);
     }
-    if (node->tags != NULL){
+    if (node->tags != NULL) {
         fprintf(outputfile, " (TAGS ");
         output_tagNode(outputfile, node->tags);
         fprintf(outputfile, ")");
+    }
+    if (node->section != NULL) {
+        fprintf(outputfile, " ");
+        output_section(outputfile, node->section);
     }
     headlineNode * child = node->child;
     while (child != NULL) {
@@ -125,5 +130,12 @@ void output_titleHeadNode(FILE * outputfile, titleHeadNode * node) {
     if (node->nextword != NULL) {
         output_titleNode(outputfile, node->nextword);
     }
+    fprintf(outputfile, "\")");
+}
+
+void output_section(FILE * outputfile, sectionNode * node) {
+    printf("sectionNode\n");
+    fprintf(outputfile, "(SECTION \"");
+    fwrite(node->body, sizeof(char), strlen(node->body), outputfile);
     fprintf(outputfile, "\")");
 }
