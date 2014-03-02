@@ -11,9 +11,18 @@ using namespace std;
 %s list
 %x headline
 %x tag_block
+%x section_block
+%x drawer
+%x drawer_key
+%x drawer_value
 headline_level ^\**[[:blank:]]
 blankLines ([[:blank:]\t]*\n)+
-section ([^*\n]+.*\n)+
+ //section ([^*\n]+.*\n)+
+section ^[^*\n]+
+drawer_start ^[[:blank:]\t]*:(PROPERTIES|CLOCK|LOGBOOK|RESULT):[\t[:blank:]]*$
+drawer_end ^[\t[:blank:]]*:END:[\t[:blank:]]*$
+drawer_value [^[:blank:]\t]+.*$
+drawer_key :[^[:blank:]\t]+:
 todo (TODO|IN-PROGRESS|WAITING|DONE|CANCELLED)
 priority \[#[a-zA-Z]\]
 tags :([A-Za-z0-9_@#%]+:)+
@@ -29,8 +38,8 @@ directive adirctivethatdoesntexist
     return STARS ;
 }
 {section} {
-  yylval.sval = strdup(yytext);
-  return SECTION;
+  BEGIN(section_block);
+  yyless(0);
 }
 
 {blankLines} {
@@ -79,7 +88,7 @@ directive adirctivethatdoesntexist
     return WORD;
 }
 
-<headline>[[:blank:]]+ {
+<headline, drawer>[[:blank:]]+ {
     yylval.sval = strdup(yytext);
     return WHITESPACE;
 }
@@ -87,5 +96,33 @@ directive adirctivethatdoesntexist
 <headline>\n {
     BEGIN(0);
  }
+
+<section_block>{drawer_start} {
+    BEGIN(drawer);
+    // I want to remove all the extra stuff around the keyword but for now
+    yylval.sval = strdup(yytext);
+    // not a real thing yet
+    return DRAWER_START;
+}
+
+<drawer>{drawer_key} {
+    BEGIN(drawer_value);
+    yylval.sval = strdup(yytext);
+    return DRAWER_KEY;
+ }
+
+<drawer_value>{value} {
+    yylval.sval = strdup(yytext);
+    return DRAWER_VALUE;
+}
+<drawer_value>\n {
+    BEGIN(drawer);
+}
+
+<drawer>{drawer_end} {
+    BEGIN(0);
+    return DRAWER_END;
+}
+
 
 %%

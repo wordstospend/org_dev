@@ -59,10 +59,10 @@ void output_ast(FILE * outputFile, documentNode * node);
 %token <sval> WORD
 %token <sval> MARKER
 %token <sval> TODO
-%token <sval> DRAWERSTART
-%token <sval> DRAWERKEY
-%token <sval> DRAWERVALUE
-%token <sval> DRAWEREND
+%token <sval> DRAWER_START
+%token <sval> DRAWER_KEY
+%token <sval> DRAWER_VALUE
+%token <sval> DRAWER_END
 %token <sval> POST_BLANK
 
 %type <ptodo> todo_keyword
