@@ -59,10 +59,10 @@ void output_ast(FILE * outputFile, documentNode * node);
 %token <sval> WORD
 %token <sval> MARKER
 %token <sval> TODO
-%token <sval> DRAWERSTART
-%token <sval> DRAWERKEY
+%token <sval> DRAWER_START
+%token <sval> DRAWER_KEY
 %token <sval> DRAWERVALUE
-%token <sval> DRAWEREND
+%token <sval> DRAWER_END
 %token <sval> POST_BLANK
 
 %type <ptodo> todo_keyword
@@ -98,6 +98,21 @@ section:        SECTION {
     printf("section\n");
      $$ = $1;
  }
+        ;
+
+paragraph:
+drawer:         DRAWER_START drawer_content DRAWER_END { // do something here }
+        ;
+
+drawer_content: drawer_content paragraph
+        |       drawer_content key_value
+        ;
+
+key_value:      DRAWER_KEY WHITESPACE drawer_value
+        ;
+// any number of words and white space without a newline
+drawer_value:   WORD
+        |
         ;
 headline:       STARS todo_keyword priority title tags
                 {

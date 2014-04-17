@@ -1,0 +1,9 @@
+The purpose of this is to write out both my experiance as well as to hopefully
+provide a path forward if the project gets lost in the woods.
+
+* Writting a BNF as a parser, or a lack of seperation
+BNF's are the deffinition of a complete lack of seperation of concerns. Almost
+everything depends on everything else. This feature of writting a parser makes
+it so that if you need to make a change it can be basicly impossible to do so
+without broad changes. In an ideal world you would create a set of subparsers
+and then delegate to each one. But this sadly is not the world we live in.

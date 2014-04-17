@@ -13,9 +13,11 @@ using namespace std;
 %x tag_block
 headline_level ^\**[[:blank:]]
 blankLines ([[:blank:]\t]*\n)+
-section ([^*\n]+.*\n)+
 todo (TODO|IN-PROGRESS|WAITING|DONE|CANCELLED)
 priority \[#[a-zA-Z]\]
+drawer_start :(PROPERTIES|CLOCK|LOGBOOK|RESULT):
+drawer_end :END:
+key :.+:
 tags :([A-Za-z0-9_@#%]+:)+
 tag :[A-Za-z0-9_@#%]+:
 word [^\n[:blank:]]*
@@ -23,14 +25,27 @@ whitespace [[:blank:]]*
 directive adirctivethatdoesntexist
 
 %%
+{drawer_start} {
+    yylval.sval = strdup(yytext);
+    return DRAWER_START;
+}
+
+{drawer_end} {
+    yylval.sval = strdup(yytext);
+    return DRAWER_END;
+}
+
+{key} {
+    // this is required to qppear after both drawer_start and drawer_end as it
+    // is the more general rule that will match both of those cases
+    yyval.sval = strdup(yytext);
+    return DRAWER_KEY;
+}
+
 {headline_level} {
     yylval.ival = yyleng -1;
     BEGIN(headline);
     return STARS ;
-}
-{section} {
-  yylval.sval = strdup(yytext);
-  return SECTION;
 }
 
 {blankLines} {
@@ -70,7 +85,7 @@ directive adirctivethatdoesntexist
     BEGIN(headline);
  }
 
-<headline>{word} {
+<INITIAL,headline>{word} {
     // word will always be strictly longer than the tags, priorty, or todo if those
     // are not followed by a spaces eg 'DONEIsNotATodoState' where it will match a
     // word rather than a todo because of the length
@@ -79,7 +94,7 @@ directive adirctivethatdoesntexist
     return WORD;
 }
 
-<headline>[[:blank:]]+ {
+<INITIAL,headline>[[:blank:]]+ {
     yylval.sval = strdup(yytext);
     return WHITESPACE;
 }
@@ -87,5 +102,6 @@ directive adirctivethatdoesntexist
 <headline>\n {
     BEGIN(0);
  }
+
 
 %%
