@@ -50,7 +50,7 @@ directive adirctivethatdoesntexist
 
 {blankLines} {
     yylval.sval = strdup(yytext);
-    return POST_BLANK;
+    return BLANK_LINES;
 }
 
 <headline>{todo} {

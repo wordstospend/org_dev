@@ -63,7 +63,7 @@ void output_ast(FILE * outputFile, documentNode * node);
 %token <sval> DRAWER_KEY
 %token <sval> DRAWERVALUE
 %token <sval> DRAWER_END
-%token <sval> POST_BLANK
+%token <sval> BLANK_LINES
 
 %type <ptodo> todo_keyword
 %type <pdoc> doc //     doc2
@@ -86,7 +86,7 @@ document:       doc      {
 
 doc:            headline { $$ = document(NULL, $1); }
         |       doc headline { $$ = document($1, $2); }
-        |       doc POST_BLANK { $$ = apendToLastChild($1,$2); }
+        |       doc BLANK_LINES { $$ = apendToLastChild($1,$2); }
         |       section { $$ = documentFromSection(NULL, $1); }
         |       doc section { $$ = documentFromSection($1, $2); }
         ;
@@ -99,6 +99,39 @@ section:        SECTION {
      $$ = $1;
  }
         ;
+
+// section_children is the set of all possible children of a section
+// all unimplemented have been commented
+section_children: section_children block
+        |       section_children drawer
+        |       section_children plain-list
+        |       section_children paragraph
+        //      TBC     |       section_children fooonote_definition
+        //      TBC     |       section_children inlinetask
+        |
+        ;
+
+
+block:          BLOCK_BEGIN_A block_content_optional BLOCK_BEGIN_B block_content_optional BLOCK_END_A
+                // the case where block b is incomplete
+        |       BLOCK_BEGIN_A block_content_optional BLOCK_END_A
+        |       BLOCK_BEGIN_B block_content_optional BLOCK_END_B
+        ;
+
+paragraph:      BLOCK_BEGIN_A block_content_optional BLOCK_BAD_END
+                // This is the case where block A is invalid because the section has ended. It may be advisible for
+                // this instead to be a generic section end token.
+        ;
+
+block_content_optional:
+                block_content_optional drawer
+        |       block_content_optional plain-list
+        |       block_content_optional paragraph
+        //      TBC     |       block_content_optional fooonote_definition
+        //      TBC     |       block_content_optional inlinetask
+        |
+        ;
+
 
 paragraph:
 drawer:         DRAWER_START drawer_content DRAWER_END { // do something here }
