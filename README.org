@@ -2,6 +2,12 @@ This is the lexer/parser project for org mode
 
 Org mode does not seem to be as unabiguous as we might like but that is fine.
 This is just a first bite at the apple
+
+"
+- I've too many ideas to write here. The only thing i can think of is
+   not quite org related. A published bison or antlr grammar, so people
+   can write org parsers/processors in other languages, and extend its
+   integration into other systems. " - the place my idea came from
 * DONE Make it work
 ** Code complete
 *** DONE Parser org.y
@@ -66,46 +72,47 @@ Universal properties
 - :end ::  the beginning and ending buffer positions of the considered element or object
 - :post-blank ::  which holds the number of blank lines, or white spaces at its end
 - :parent
-** TODO Greater Elements [0/9]
-- [ ] blocks :: #+BEGIN_NAME ... #+END_NAME
-  - [ ] `center-block'
-  - [ ] `dynamic-block' ::#+BEGIN: block_name :paramkey1 param1 ...
-  - [ ] `quote-block'
-  - [ ] `special-block' :: has many names which are used by differnt exporter backends
-- [ ] `drawer' :: ^[\t ]*\:(PROPERTIES|CLOCK|LOGBOOK|RESULT):[\t ]*$ some lines later ^[\t ]*:END:[\t ]*$
-- [ ] `footnote-definition'
-- [ ] `headline'
-- [ ] `inlinetask'
-- [ ] `item'
-- [ ] `plain-list'
-- [ ] `property-drawer'
-- [ ] `section'
-** TODO Elements [0/19]
-- [ ] `comment-block'
-- [ ] `example-block'
-- [ ] `export-block'
-- [ ] `src-block'
-- [ ] `verse-block'
-- [ ] `babel-call'
-- [ ] `clock'
-- [ ] `comment'
-- [ ] `diary-sexp'
-- [ ] `fixed-width'
-- [ ] `horizontal-rule'
-- [ ] `keyword'
-- [ ] `latex-environment'
-- [ ] `node-property'
+** TODO Greater Elements [9/9]
+- [X] blocks :: #+BEGIN_NAME ... #+END_NAE `center-block' #+BEGIN_CENTER ... #+END_CENTER
+  - [X] `dynamic-block' ::#+BEGIN: block_name :paramkey1 param1 ... #+END
+  - [X] `quote-block' #+BEGIN_QUOTE: ... #+END_QUOTE
+  - [X] `special-block' :: #+BEGIN_NAME ... #+END_NAME This is the block of last resort. If I'm nothing else I'm this
+- [X] `drawer' :: ^[\t ]*\:(PROPERTIES|CLOCK|LOGBOOK|RESULT):[\t ]*$ some lines later ^[\t ]*:END:[\t ]*$
+- [X] `footnote-definition' ^(\[[(0-9)]\]+|[fn:[_-\w]+\]) ends at next footnote def, headline or two consecutive empty lines
+- [X] `headline' ::\*+\s+
+- [X] `inlinetask' ^\*{<min-level>}\**\s+ .. /just like a headline/  ^\*{min-level}\s+END or another inlinetask
+- [X] `item' This is grabed by org-list-full-item-re to put together [[file:~/Documents/personal_dev/emacs.d/vendor/org-mode/lisp/org-list.el::(defun%20org-list-struct%20()][org-list-struct]]
+- [X] `plain-list' A list is defined by [[file:/Applications/Emacs.app/Contents/Resources/lisp/org/org-list.el.gz]]
+- [X] `property-drawer' ::   same as drawer, but only PROPERTIES start contents only node properties
+- [X] `section' :: From one headline to the next
+** TODO Elements [16/19]
+- [X] `comment-block' :: #+BEGIN_COMMENT .. #+END_COMMENTNT
+- [X] `example-block' ::#+BEGIN_EXAMPLE .. #+END_EXAMPLE
+- [X] `export-block':: #+BEGIN_NAME .. #+END_NAME where name matches some backend
+- [X] `src-block' ::  #+BEGIN_SRC .. #+END_SRC
+- [X] `verse-block' :: #+BEGIN_VERSE .. #+END_VERSE
+- [X] `babel-call' :: ^\+CALL:[ \t]*(.*) value is the capture
+- [X] `clock' :: "^[ 	]*CLOCK:"  this is a settable value it is followed by a TIMESTAMP obj DURATION obj
+- [X] `comment' :: "[ \t]*#\\(?: \\|$\\)" the remainder of the line is the comment
+- [X] `diary-sexp' :: "\\(%%(.*\\)[ \t]*$"
+- [X] `fixed-width' :: "[ \t]*:\\( \\|$\\) the remainder of the line is a fixed width
+- [X] `horizontal-rule' :: "[ \t]*-\\{5,\\}[ \t]*$"
+- [ ] `keyword' :: "[ \t]*#\\+\\(\\S-+*\\):" :: value start at the first noneWhitspece and at the last nonewhitespace char in the line
+- [X] `latex-environment' :: "[ \t]*\\\\begin{[A-Za-z0-9*]+}\\(\\[.*?\\]\\|{.*?}\\)*[ \t]*$" to begin to end "\end{NAME}"
+- [X] `node-property' :: "^[ 	]*\\(:\\([-[:alnum:]_]+\\+?\\):\\)[ 	]*\\([^ 	\n].*\\)"
 - [ ] `paragraph'
-- [ ] `planning'
+- [X] `planning' "^[ 	]*\\(SCHEDULED:\\|DEADLINE:\\|CLOSED:\\)")  folled by TIMESTAMP obj
 - [ ] `quote-section'
-- [ ] `table'
-- [ ] `table-row'
+- [X] `table' org-tabe-any-line-regex "^[ 	]*\\(|\\|\\+-[-+]\\)" org-table-line-regexp  "^[ 	]*|"
+- [X] `table-row' any line that starts with | any line with |- is a seperator line "[ \t]*#\\+TBLFM: +\\(.*\\)[ \t]*$"
 Among them,`paragraph' and `verse-block' types can contain Org objects and plain text.
 ** Objects
 ;; Objects are related to document's contents. Some of them are
 ;; recursive. Associated types are of the following: `bold', `code',
 ;; `entity', `export-snippet', `footnote-reference',
-;; `inline-babel-call', `inline-src-block', `italic',
+- [ ]`inline-babel-call' call_NAME(ARGUMENTS) or call_NAME[HEADER](ARGUMENTS)[HEADER]
+- [ ] `inline-src-block'src_LANG{BODY}  :: src_LANG[OPTIONS]{BODY} LANG is any none whitespace character OPTION BODY any character but \n
+;;, `italic',
 ;; `latex-fragment', `line-break', `link', `macro', `radio-target',
 ;; `statistics-cookie', `strike-through', `subscript', `superscript',
 ;; `table-cell', `target', `timestamp', `underline' and `verbatim'.
@@ -145,7 +152,7 @@ Among them,`paragraph' and `verse-block' types can contain Org objects and plain
 - sub/superscript
 - target
 - text-markup
-- timestamp
+-
 * It is possbile that multiple lexers can written and compiled in, each used based on a flag
 flex -P flag changes the prefix of the all global variables
 This, will allow us to define different 'flavors' of org mode parser. It doesn't overcome
@@ -204,3 +211,76 @@ object = {
 #+end_src
 the function org-element-interpret-data 'is the penulimate' function for the obtained parse tree
 Going to start reading  org-element-parse-buffer
+* Solving the block problem
+If you have a
+BEGIN_TOKEN
+END_TOKEN_2
+#+BEGIN_SRC c
+block_cont:     BLOCK_BEGIN block_param block_cont END {
+                  // we determin if END matches BLOCK_BEGIN
+                  // if it doesn't we create the paragraph token
+                  // from the BLOCK_BEGIN and then set a lexical tie-in
+
+ }
+        |       block_cont block_children
+        |
+        ;
+
+block_param:    block_param BLOCK_PARAM
+        |
+        ;
+#+END_SRC
+
+
+how do you tell that the end token isn't really an end token? to the rescue Lexical Tie-ins.
+Using a shared state value you maintain a stack of begins tokens, then in the lexer you check that
+stack to see if the 'end_token' really is an end token. If it is then return it to the parser.
+ [fn:1:more of what we want[go one]] The parser then durring production will pop the stack up to and including the matching begin token.
+This will only work if you then communicate to lexer when you have reached your matching begin.
+The result is blocks will begin and end properly and those that don't can be treated like the 'paragraph'
+things they are eg
+BEGIN_BLOCK_TOKEN_1
+BEGIN_BLOCK_TOKEN_2
+END_TOKEN_1
+END_TOKEN_2
+
+=> (section (block1 (paragraph 'BEGIN_BLOCK_TOKEN_2')) (paragraph 'END_TOKEN_2'))
+** Option 2: Sorry bro, you can't infinate blocks in blocks have blocks in blocks
+We limit the number of blocks types that can exist. This will mean that some things are not possible but it also
+gives us a simple means by which to solve this and stay true to a regular language.
+
+block:          BLOCK_BEGIN_A block_content_optional BLOCK_BEGIN_B block_content_optional BLOCK_END_A
+                // the case where block b is incomplete
+        |       BLOCK_BEGIN_A block_content_optional BLOCK_END_A
+        |       BLOCK_BEGIN_B block_content_optional BLOCK_END_B
+        ;
+
+paragraph:      BLOCK_BEGIN_A block_content_optional BLOCK_BAD_END
+                // This is the case where block A is invalid because the section has ended. It may be advisible for
+                // this instead to be a generic section end token.
+        ;
+
+block_content_optional:
+                block_conteent_optional block
+        ;
+
+
+** Option 3: Sorry bro no blocks in in blocks at all
+
+* Footnotes
+
+[fn:1] test of a foonote
+
+* a test of list
+5. [@5] go on
+4. [@4] what?
+5.
+6.
+?:
+#
+# foo
+#+RESULT[thing]
+#+foo
+
+
+"[ \t]*#\\+\\(?:\\(?:RESULT\\)\\(?:\\[\\(.*\\)\\]\\)?\\|\\(?1:foo\\)\\):\\(?: \\|$\\)"
