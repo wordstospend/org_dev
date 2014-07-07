@@ -73,7 +73,7 @@ Universal properties
 - :post-blank ::  which holds the number of blank lines, or white spaces at its end
 - :parent
 ** TODO Greater Elements [9/9]
-- [X] blocks :: #+BEGIN_NAME ... #+END_NAE `center-block' #+BEGIN_CENTER ... #+END_CENTER
+- [X] blocks :: #+BEGIN_NAME ... #+END_NAME `center-block' #+BEGIN_CENTER ... #+END_CENTER
   - [X] `dynamic-block' ::#+BEGIN: block_name :paramkey1 param1 ... #+END
   - [X] `quote-block' #+BEGIN_QUOTE: ... #+END_QUOTE
   - [X] `special-block' :: #+BEGIN_NAME ... #+END_NAME This is the block of last resort. If I'm nothing else I'm this
@@ -284,3 +284,38 @@ block_content_optional:
 
 
 "[ \t]*#\\+\\(?:\\(?:RESULT\\)\\(?:\\[\\(.*\\)\\]\\)?\\|\\(?1:foo\\)\\):\\(?: \\|$\\)"
+* Lexar
+** TODO Greater Elements [0/9]
+- [-] blocks :: #+BEGIN_NAME ... #+END_NAME `center-block' #+BEGIN_CENTER ... #+END_CENTER
+  - [ ] `dynamic-block' ::#+BEGIN: block_name :paramkey1 param1 ... #+END
+  - [X] `quote-block' #+BEGIN_QUOTE: ... #+END_QUOTE
+  - [X] `special-block' :: #+BEGIN_NAME ... #+END_NAME This is the block of last resort. If I'm nothing else I'm this
+- [ ] `drawer' :: ^[\t ]*\:(PROPERTIES|CLOCK|LOGBOOK|RESULT):[\t ]*$ some lines later ^[\t ]*:END:[\t ]*$
+- [ ] `footnote-definition' ^(\[[(0-9)]\]+|[fn:[_-\w]+\]) ends at next footnote def, headline or two consecutive empty lines
+- [ ] `headline' ::\*+\s+
+- [ ] `inlinetask' ^\*{<min-level>}\**\s+ .. /just like a headline/  ^\*{min-level}\s+END or another inlinetask
+- [ ] `item' This is grabed by org-list-full-item-re to put together [[file:~/Documents/personal_dev/emacs.d/vendor/org-mode/lisp/org-list.el::(defun%20org-list-struct%20()][org-list-struct]]
+- [ ] `plain-list' A list is defined by [[file:/Applications/Emacs.app/Contents/Resources/lisp/org/org-list.el.gz]]
+- [ ] `property-drawer' ::   same as drawer, but only PROPERTIES start contents only node properties
+- [ ] `section' :: From one headline to the next
+** TODO Elements [4/19]
+- [X] `comment-block' :: #+BEGIN_COMMENT .. #+END_COMMENT
+- [X] `example-block' ::#+BEGIN_EXAMPLE .. #+END_EXAMPLE
+- [ ] `export-block':: #+BEGIN_NAME .. #+END_NAME where name matches some backend
+- [X] `src-block' ::  #+BEGIN_SRC .. #+END_SRC
+- [X] `verse-block' :: #+BEGIN_VERSE .. #+END_VERSE
+- [ ] `babel-call' :: ^\+CALL:[ \t]*(.*) value is the capture
+- [ ] `clock' :: "^[ 	]*CLOCK:"  this is a settable value it is followed by a TIMESTAMP obj DURATION obj
+- [ ] `comment' :: "[ \t]*#\\(?: \\|$\\)" the remainder of the line is the comment
+- [ ] `diary-sexp' :: "\\(%%(.*\\)[ \t]*$"
+- [ ] `fixed-width' :: "[ \t]*:\\( \\|$\\) the remainder of the line is a fixed width
+- [ ] `horizontal-rule' :: "[ \t]*-\\{5,\\}[ \t]*$"
+- [ ] `keyword' :: "[ \t]*#\\+\\(\\S-+*\\):" :: value start at the first noneWhitspece and at the last nonewhitespace char in the line
+- [ ] `latex-environment' :: "[ \t]*\\\\begin{[A-Za-z0-9*]+}\\(\\[.*?\\]\\|{.*?}\\)*[ \t]*$" to begin to end "\end{NAME}"
+- [ ] `node-property' :: "^[ 	]*\\(:\\([-[:alnum:]_]+\\+?\\):\\)[ 	]*\\([^ 	\n].*\\)"
+- [ ] `paragraph'
+- [ ] `planning' "^[ 	]*\\(SCHEDULED:\\|DEADLINE:\\|CLOSED:\\)")  folled by TIMESTAMP obj
+- [ ] `quote-section'
+- [ ] `table' org-tabe-any-line-regex "^[ 	]*\\(|\\|\\+-[-+]\\)" org-table-line-regexp  "^[ 	]*|"
+- [ ] `table-row' any line that starts with | any line with |- is a seperator line "[ \t]*#\\+TBLFM: +\\(.*\\)[ \t]*$"
+Among them,`paragraph' and `verse-block' types can contain Org objects and plain text.

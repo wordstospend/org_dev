@@ -11,6 +11,19 @@ using namespace std;
 %s list
 %x headline
 %x tag_block
+special_block_begin ^[:blank:]*#\+BEGIN_[^[:blank:]]+
+special_block_end  ^[:blank:]*#\+END_[^[:blank:]]+
+quote_block_begin ^[:blank:]*#\+BEGIN_QUOTE
+quote_block_end  ^[:blank:]*#\+END_QUOTE
+comment_block_begin ^[:blank:]*#\+BEGIN_COMMENT
+comment_block_end  ^[:blank:]*#\+END_COMMENT
+example_block_begin ^[:blank:]*#\+BEGIN_EXAMPLE
+example_block_end  ^[:blank:]*#\+END_EXAMPLE
+verse_block_begin ^[:blank:]*#\+BEGIN_VERSE
+verse_block_end  ^[:blank:]*#\+END_VERSE
+src_block_begin ^[:blank:]*#\+BEGIN_SRC
+src_block_end  ^[:blank:]*#END_SRC
+
 headline_level ^\**[[:blank:]]
 blankLines ([[:blank:]\t]*\n)+
 todo (TODO|IN-PROGRESS|WAITING|DONE|CANCELLED)
