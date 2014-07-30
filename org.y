@@ -9,17 +9,6 @@ extern "C" int yylex();
 extern "C" int yyparse();
 extern "C" FILE *yyin;
 
-todoNode * todo(char * state, char * whitespace);
-priorityNode * priority(char * state, char * whitespace);
-titleHeadNode * title(titleHeadNode * headNode, char * word);
-tagNode * tag(char * state, char * whitespace);
-tagNode * tags(tagNode* tagList, char* state, char* whitespace);
-headlineNode * headline(int stars, todoNode * todo, priorityNode * priority,
-                        titleHeadNode * title, tagNode * tags );
-documentNode * document(documentNode * doc, headlineNode * headline);
-sectionNode * section(char * body);
-documentNode * apendToLastChild(documentNode * doc, char * blankSpace);
-documentNode * documentFromSection(documentNode *doc, char * sectionString);
 
 void yyerror(const char *s);
 FILE * astFile;
@@ -35,12 +24,6 @@ void output_ast(FILE * outputFile, documentNode * node);
 %union {
 	int ival;
 	char *sval;
-    todoNode *ptodo;
-    priorityNode *ppriority;
-    titleHeadNode *ptitle;
-    tagNode *ptags;
-    headlineNode *pheadline;
-    documentNode *pdoc;
 };
 
 // constant-string token
@@ -49,7 +32,6 @@ void output_ast(FILE * outputFile, documentNode * node);
 
 // define the "terminal symbol" token types I'm going to use (in CAPS
 // by convention), and associate each with a field of the union:
-%token <sval>
 %token <sval> BLANK_LINES
 
 %type <ptodo> todo_keyword
