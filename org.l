@@ -33,46 +33,33 @@ drawer_begin ^[:blank:]*:(PROPERTIES|CLOCK|LOGBOOK|RESULT):[:blank:]*$
 drawer_end ^[:blank:]*:END:[:blank:]*$
 
 
-
-blankLines ([[:blank:]\t]*\n)+
+blankLines (^[[:blank:]\t]*\n)+
 todo (TODO|IN-PROGRESS|WAITING|DONE|CANCELLED)
 priority \[#[a-zA-Z]\]
-drawer_start :(PROPERTIES|CLOCK|LOGBOOK|RESULT):
-drawer_end :END:
-key :.+:
 tags :([A-Za-z0-9_@#%]+:)+
 tag :[A-Za-z0-9_@#%]+:
 word [^\n[:blank:]]*
 whitespace [[:blank:]]*
-directive adirctivethatdoesntexist
 
 %%
-{drawer_start} {
-    yylval.sval = strdup(yytext);
-    return DRAWER_START;
-}
-
-{drawer_end} {
-    yylval.sval = strdup(yytext);
-    return DRAWER_END;
-}
-
-{key} {
-    // this is required to qppear after both drawer_start and drawer_end as it
-    // is the more general rule that will match both of those cases
-    yyval.sval = strdup(yytext);
-    return DRAWER_KEY;
-}
-
-{headline_level} {
-    yylval.ival = yyleng -1;
+{headline_begin} {
+    yylval.ival = yyleng;
     BEGIN(headline);
-    return STARS ;
+    return HEADLINE_BEGIN;
 }
 
-{blankLines} {
+<headline>\n {
+    BEGIN(0);
+ }
+
+<*>{word} {
     yylval.sval = strdup(yytext);
-    return BLANK_LINES;
+    return WORD;
+}
+
+<headline>[[:blank:]]+ {
+    yylval.sval = strdup(yytext);
+    return WHITESPACE;
 }
 
 <headline>{todo} {
@@ -116,14 +103,8 @@ directive adirctivethatdoesntexist
     return WORD;
 }
 
-<INITIAL,headline>[[:blank:]]+ {
-    yylval.sval = strdup(yytext);
-    return WHITESPACE;
-}
 
-<headline>\n {
-    BEGIN(0);
- }
+
 
 
 %%

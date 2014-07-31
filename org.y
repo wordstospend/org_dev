@@ -30,35 +30,28 @@ void output_ast(FILE * outputFile, documentNode * node);
 %token ENDLN
 %token EOF_TOKEN
 
+
 // define the "terminal symbol" token types I'm going to use (in CAPS
 // by convention), and associate each with a field of the union:
 %token <sval> BLANK_LINES
-
-%type <ptodo> todo_keyword
-%type <pdoc> doc //     doc2
-%type <ppriority> priority
-%type <ptitle> title
-%type <ptags> tags
-%type <pheadline> headline
-%type <sval> section
+%token <ival> HEADLINE_BEGIN
+%token <sval> WORD
+%token <sval> WHITESPACE
 
 %%
 
-document:       doc      {
-  if (astFile != NULL) {
-                printf("calling output_ast\n");
-                output_ast(astFile, $1);
-                }
-                exit(0);
-                }
+
+snazzle:
+                snazle HEADLINE_BEGEIN { printf("headline %i", $1); }
+        |       snazzle WORD { printf("word %s", $1); }
+        |       snazzle BLANKLINES { printf("blanklines '%s'", $1); }
+        |       snazzle WHITESPACE { printf("whitespace '%s'", $1); }
+        |       HEADLINE_BEGEIN { printf("headline %i", $1); }
+        |       WORD { printf("word %s", $1); }
+        |       BLANKLINES { printf("blanklines '%s'", $1); }
+        |       WHITESPACE { printf("whitespace '%s'", $1); }
         ;
 
-doc:            headline { $$ = document(NULL, $1); }
-        |       doc headline { $$ = document($1, $2); }
-        |       doc BLANK_LINES { $$ = apendToLastChild($1,$2); }
-        |       section { $$ = documentFromSection(NULL, $1); }
-        |       doc section { $$ = documentFromSection($1, $2); }
-        ;
 
 %%
 
