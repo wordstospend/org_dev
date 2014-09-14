@@ -23,3 +23,10 @@ org_debug:bison_debug flex_debug
 
 test_debug: org_debug
 	prove -l t/parse.t
+
+# lexical test not complete
+
+test_lex: org_lex
+
+org_lex: lex.yy.c org.tab.c org.tab.h org_debug_lex.c
+	g++-4.2 org.tab.c lex.yy.c org_debug_lex.c -ll -o org-lex
