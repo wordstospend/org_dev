@@ -8,48 +8,15 @@ This is just a first bite at the apple
    not quite org related. A published bison or antlr grammar, so people
    can write org parsers/processors in other languages, and extend its
    integration into other systems. " - the place my idea came from
-* DONE Make it work
-** Code complete
-*** DONE Parser org.y
-This seems to be mostly done I'm sure I've got some gaps but for now this
-looks like it is good enough
-*** DONE parser V2 change order of docuement so it is top to bottom traversal
-*** DONE Lexer org.l
-This has a bunch of code but really needs to be from scratch. The current
-plan is add stubs for all of the tokens that will need to be output by the
-lexer and then to go one by one and add work for them. At each case we
-should add a test case for that token
-** Testing sweet
-*** DONE Testing Harness
-We now can pass in a filename to the resulting org-parser but we still need
-to add a bit more machinery, maybe a prove script or some such thing
-*** DONE Testing Harness for AST result
-**** DONE output ast to file
-the basis for this work is /Users/nfair/Documents/personal_dev/LexAndYaccCode/calc3.y
-***** DONE define a set of nodes for the ast
-The question is for things such as 'priority' where it may or may not exist
-Should I create a struct to store the node then detect the nature of the struct
-in the parent rule action (in this case headline). Or can just do no action
-and if so can I detect the lack of value in the parent action
-****** DONE todoNode
-****** DONE priorityNode
-****** DONE titleNode
-****** DONE tagsNode
-****** DONE headlineNode
-***** DONE define functions that return them
-***** DONE define parser actions to call node creation funcitons
-***** DONE define a fuction that reads the ast and outputs it as an in-order traversal
-**** DONE compaire ast from file parser output
-*** DONE Unit test
-* TODO Make it work better
-** TODO priority
-** TODO define a section
-** TODO add special word "COMMENT" to headline
-** TODO add spical tag "ARCHIVE"
-** TODO add Greater Element
+* Project outine
+** TODO Get lexer working
+*** TODO create generic bison file that will accept and print all the output tokens
+*** TODO create make target that will build my lexer parser with the generic bison
+*** TODO write lexer
+** TODO get Parser working
 * Objective C realease
 ** TODO research and outline
-
+http://stackoverflow.com/questions/6296758/integrating-bison-flex-yacc-into-xcode
 * org parser notes
 a headline is a child of the current parent if its star count > the cout of
 the parent.
@@ -320,4 +287,4 @@ It is also lexically identical in form to the special-block
 - [ ] `quote-section'
 - [ ] `table' org-tabe-any-line-regex "^[ 	]*\\(|\\|\\+-[-+]\\)" org-table-line-regexp  "^[ 	]*|"
 - [ ] `table-row' any line that starts with | any line with |- is a seperator line "[ \t]*#\\+TBLFM: +\\(.*\\)[ \t]*$"
-Among them,`paragraph' and `verse-block' types can contain Org objects and plain text.
+Among them,`paragraph' and `verse-block' types can contain Org objects and plain
