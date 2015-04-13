@@ -288,3 +288,8 @@ It is also lexically identical in form to the special-block
 - [ ] `table' org-tabe-any-line-regex "^[ 	]*\\(|\\|\\+-[-+]\\)" org-table-line-regexp  "^[ 	]*|"
 - [ ] `table-row' any line that starts with | any line with |- is a seperator line "[ \t]*#\\+TBLFM: +\\(.*\\)[ \t]*$"
 Among them,`paragraph' and `verse-block' types can contain Org objects and plain
+
+* org-element overview
+** org-element--parse-elements
+*** org-element--current-element
+*** org-element--parse-objects

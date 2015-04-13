@@ -12,7 +12,7 @@ extern "C" FILE *yyin;
 
 void yyerror(const char *s);
 FILE * astFile;
-void output_ast(FILE * outputFile, documentNode * node);
+
 
 %}
 
@@ -37,19 +37,19 @@ void output_ast(FILE * outputFile, documentNode * node);
 %token <ival> HEADLINE_BEGIN
 %token <sval> WORD
 %token <sval> WHITESPACE
-
+%token <sval> STRING
 %%
 
 
 snazzle:
-                snazle HEADLINE_BEGEIN { printf("headline %i", $1); }
-        |       snazzle WORD { printf("word %s", $1); }
-        |       snazzle BLANKLINES { printf("blanklines '%s'", $1); }
-        |       snazzle WHITESPACE { printf("whitespace '%s'", $1); }
-        |       HEADLINE_BEGEIN { printf("headline %i", $1); }
-        |       WORD { printf("word %s", $1); }
-        |       BLANKLINES { printf("blanklines '%s'", $1); }
-        |       WHITESPACE { printf("whitespace '%s'", $1); }
+              snazzle HEADLINE_BEGIN { cout << "headline " << $2 << endl; }
+        |       snazzle WORD { cout << "word " << $2 <<endl; }
+        |       snazzle BLANK_LINES { cout << "blanklines '" << $2 << "'" << endl; }
+        |       snazzle WHITESPACE { cout << "whitespace '" <<  $2 << "'"<< endl; }
+        |       HEADLINE_BEGIN { cout << "headline " << $1 << endl; }
+        |       WORD { cout << "word " << $1 << endl; }
+        |       BLANK_LINES { cout << "blanklines '" << $1 << "'" << endl; }
+        |       WHITESPACE { cout << "whitespace '" <<  $1 << "'"<< endl; }
         ;
 
 

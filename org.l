@@ -62,47 +62,6 @@ whitespace [[:blank:]]*
     return WHITESPACE;
 }
 
-<headline>{todo} {
-    yylval.sval = strdup(yytext);
-    return TODO;
- }
-
-<headline>{priority} {
-    yylval.sval = strdup(yytext);
-    return PRIORITY;
-}
-
-<headline>{tags} {
-    BEGIN(tag_block);
-    yyless(0);
- }
-
-<headline,tag_block>{tag} {
-    //This is a capture of a tag witha trailing ':' which should be placed back
-    // on the input stream. Resulting in a trailing ':' after all
-    // tags are captured
-    yytext[yyleng -1] = '\0';
-    yylval.sval = strdup(++yytext);
-    unput(':');
-
-    return TAG;
- }
-
-<tag_block>: {
-    // this is to capture the trailing context of ':' left at the end of a
-    // group of tags
-    BEGIN(headline);
- }
-
-<INITIAL,headline>{word} {
-    // word will always be strictly longer than the tags, priorty, or todo if those
-    // are not followed by a spaces eg 'DONEIsNotATodoState' where it will match a
-    // word rather than a todo because of the length
-
-    yylval.sval = strdup(yytext);
-    return WORD;
-}
-
 
 
 
